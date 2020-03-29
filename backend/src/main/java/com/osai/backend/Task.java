@@ -11,7 +11,7 @@ import javax.persistence.Id;
 public class Task {
 
     private @Id @GeneratedValue Long id;
-    private String user;
+    private String username;
     private String title;
     private int minute;
     private int hour;
@@ -28,7 +28,7 @@ public class Task {
     Task() {}
 
     Task(   
-        String user, 
+        String username, 
         String title, 
         int minute, 
         int hour, 
@@ -42,7 +42,7 @@ public class Task {
         long right_child,
         long left_child
     ){
-        this.user = user;
+        this.username = username;
         this.title = title;
         this.minute = minute;
         this.hour = hour;
@@ -58,7 +58,7 @@ public class Task {
     }
 
     //Getters 
-    public String getUser() { return this.user; }
+    public String getUser() { return this.username; }
     public String getTitle(){ return this.title; }
     public int[] getTime() { 
         int[] time = {this.hour, this.minute}; 
