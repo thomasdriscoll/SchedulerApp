@@ -1,4 +1,4 @@
-package com.osai.backend;
+package com.osai.backend.task;
 
 // import java.util.List;
 
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-class TaskController {
+public class TaskController {
     private TaskRepository repository;
 
     TaskController(TaskRepository repository){

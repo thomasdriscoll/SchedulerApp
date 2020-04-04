@@ -1,4 +1,4 @@
-package com.osai.backend;
+package com.osai.backend.task;
 
 class TaskNotFoundException extends RuntimeException {
 	public TaskNotFoundException(Long id) {

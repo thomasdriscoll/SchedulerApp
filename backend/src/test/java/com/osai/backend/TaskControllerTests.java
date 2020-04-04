@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import com.osai.backend.task.*;
 
 @SpringBootTest
 public class TaskControllerTests {
@@ -16,6 +17,4 @@ public class TaskControllerTests {
     public void contextLoads() throws Exception {
         assertThat(controller).isNotNull();
     }
-
-
 }
