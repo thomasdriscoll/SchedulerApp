@@ -25,9 +25,9 @@ public class Task {
     private long right_child;
     private long left_child;
 
-    Task() {}
+    public Task() {}
 
-    Task(   
+    public Task(   
         String username, 
         String title, 
         int minute, 
@@ -58,6 +58,7 @@ public class Task {
     }
 
     //Getters 
+    public Long getId() { return this.id; }
     public String getUser() { return this.username; }
     public String getTitle(){ return this.title; }
     public int[] getTime() { 

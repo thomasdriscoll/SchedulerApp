@@ -35,7 +35,7 @@ public class TaskController {
     
     @GetMapping("/getTaskById/{id}")
     public Task getTaskById(@PathVariable long id) {
-         return repository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+         return repository.findById(id).orElse(null);
     }
 
     @DeleteMapping("/deleteTaskById/{id}") 
