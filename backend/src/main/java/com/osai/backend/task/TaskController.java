@@ -51,10 +51,11 @@ public class TaskController {
         return repository.findById(id)
             .map(task -> {
                 repository.deleteById(id);
+                newTask.setId(id);
                 return repository.save(newTask);
             }).orElseGet(() -> {
+                newTask.setId(id);
                 return repository.save(newTask);
             });
     }
-    
 }

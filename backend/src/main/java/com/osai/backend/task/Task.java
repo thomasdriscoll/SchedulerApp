@@ -112,5 +112,8 @@ public class Task {
     public void setRightChild(Long right) {
         this.right_child = right;
     }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
 }
