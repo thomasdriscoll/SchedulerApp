@@ -24,6 +24,7 @@ public class TaskController {
     //Mappings
     @PostMapping(path="/createTask")
     public Task createTask(@RequestBody Task newTask){
+        //Need to do sanitation on the input
         return repository.save(newTask);
     }
 
@@ -40,7 +41,9 @@ public class TaskController {
 
     @DeleteMapping("/deleteTaskById/{id}") 
     public void deleteTaskById(@PathVariable long id) {
-        repository.deleteById(id);
+        if(repository.existsById(id)){
+            repository.deleteById(id);
+        }
     }
 
     @PutMapping("/updateTaskById/{id}")
