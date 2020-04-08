@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TaskController {
     private TaskRepository repository;
 
-    TaskController(TaskRepository repository){
+    public TaskController(TaskRepository repository){
         this.repository = repository;
     }
 
