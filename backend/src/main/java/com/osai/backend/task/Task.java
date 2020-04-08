@@ -1,4 +1,4 @@
-package com.osai.backend;
+package com.osai.backend.task;
 
 import lombok.Data;
 
@@ -25,9 +25,9 @@ public class Task {
     private long right_child;
     private long left_child;
 
-    Task() {}
+    public Task() {}
 
-    Task(   
+    public Task(   
         String username, 
         String title, 
         int minute, 
@@ -58,6 +58,7 @@ public class Task {
     }
 
     //Getters 
+    public Long getId() { return this.id; }
     public String getUser() { return this.username; }
     public String getTitle(){ return this.title; }
     public int[] getTime() { 
@@ -110,6 +111,9 @@ public class Task {
     }
     public void setRightChild(Long right) {
         this.right_child = right;
+    }
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }

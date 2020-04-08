@@ -1,4 +1,4 @@
-package com.osai.backend;
+package com.osai.backend.task;
 
 // import java.util.List;
 
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-class TaskController {
+public class TaskController {
     private TaskRepository repository;
 
     TaskController(TaskRepository repository){
@@ -24,6 +24,7 @@ class TaskController {
     //Mappings
     @PostMapping(path="/createTask")
     public Task createTask(@RequestBody Task newTask){
+        //Need to do sanitation on the input
         return repository.save(newTask);
     }
 
@@ -35,12 +36,14 @@ class TaskController {
     
     @GetMapping("/getTaskById/{id}")
     public Task getTaskById(@PathVariable long id) {
-         return repository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+         return repository.findById(id).orElse(null);
     }
 
     @DeleteMapping("/deleteTaskById/{id}") 
     public void deleteTaskById(@PathVariable long id) {
-        repository.deleteById(id);
+        if(repository.existsById(id)){
+            repository.deleteById(id);
+        }
     }
 
     @PutMapping("/updateTaskById/{id}")
@@ -48,10 +51,11 @@ class TaskController {
         return repository.findById(id)
             .map(task -> {
                 repository.deleteById(id);
+                newTask.setId(id);
                 return repository.save(newTask);
             }).orElseGet(() -> {
+                newTask.setId(id);
                 return repository.save(newTask);
             });
     }
-    
 }
