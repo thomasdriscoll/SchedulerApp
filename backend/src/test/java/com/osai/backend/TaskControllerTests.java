@@ -38,11 +38,11 @@ public class TaskControllerTests {
     // Reference: https://mkyong.com/spring-boot/mockito-how-to-mock-repository-findbyid-thenreturn-optional/
     @Before 
         public void init() {
-            Task task1 =  Task expect1 = new Task("thomasdriscoll", "Example Task 1", 5, 0, 5, 3, true,
+            Task task1 = new Task("thomasdriscoll", "Example Task 1", 5, 0, 5, 3, true,
                 "123 Sesame St., Disney Land, CA 12345", 10, "afternoon", (float) 72.0, 1234567890, 987654321);
-            Task expect2 = new Task("thomasdriscoll", "Example Task 2", 5, 0, 5, 3, true,
+            Task task2 = new Task("thomasdriscoll", "Example Task 2", 5, 0, 5, 3, true,
                 "123 Sesame St., Disney Land, CA 12345", 10, "afternoon", (float) 72.0, 1234567890, 987654321);
-            Task[] task_list 
+            Task[] task_list = {task1, task2};
             
         }
     
@@ -61,13 +61,10 @@ public class TaskControllerTests {
     public void getAllTasks() throws Exception {
        
 
-        //JSONify Task_list
-        ObjectMapper mapper = new ObjectMapper();
-        String task_list_str = mapper.writeValueAsString(task_list);
+        
 
         controller.perform(MockMvcRequestBuilders
             .get("/all")
-            .content(task_list_str)
             .contentType(MediaType.APPLICATION_JSON)
             .characterEncoding("utf-8"))
             .andExpect(status().isOk())
@@ -84,7 +81,9 @@ public class TaskControllerTests {
 
     //     Task expect = new Task("thomasdriscoll", "Example Task 1", 5, 0, 5, 3, true,
     //     "123 Sesame St., Disney Land, CA 12345", 10, "afternoon", (float) 72.0, 1234567890, 987654321);
-
+    //JSONify Task_list
+    // ObjectMapper mapper = new ObjectMapper();
+    // String task_list_str = mapper.writeValueAsString(task_list);
 
     //     controller.perform(post("/createTask")
     //         .contentType(MediaType.APPLICATION_JSON)
