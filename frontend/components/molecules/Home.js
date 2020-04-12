@@ -1,10 +1,10 @@
 import React from 'react';
 import {View,Text} from 'react-native';
 
-export default function CreateTask(){
+export default function CreateTask(props){
     return(
         <View>
-            <Text>Create Task</Text>
+            <Text>Home</Text>
         </View>
     )
 }

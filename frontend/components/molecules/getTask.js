@@ -1,12 +1,10 @@
-import React, { Component } from 'react';
-import {StyleSheet, Button, View, SafeAreaView, Text, Alert} from 'react-native';
+import React from 'react';
+import {View,Text} from 'react-native';
 
-
-export class GetTask extends Component{
-    constructor(props){
-        super(props);
-    }
-    render(){
-       return(<View><h1>Fill me out!</h1></View>);
-    }
+export default function CreateTask(){
+    return(
+        <View>
+            <Text>Get Task</Text>
+        </View>
+    )
 }
