@@ -2,7 +2,7 @@ import React from 'react';
 import {View,Text, StyleSheet} from 'react-native';
 import Button1 from '../atoms/Button1';
 
-export default function Registration(){
+export default function Registration({history}){
     return(
         <View style={styles.container}>
             <View style={styles.subCon1}>
@@ -11,7 +11,7 @@ export default function Registration(){
                 <Button1 text={`Let's go!`} onPress={()=>console.log('button hit')}/>
             </View>
             <View style={styles.subCon2}>
-                <Text style={styles.signInRedirect}>Already have a Schedelta account? Sign in</Text>
+                <Text style={styles.signInRedirect} onPress={()=>console.log('sign redirect hit')}>Already have a Schedelta account? Sign in</Text>
             </View>
         </View>
     )
