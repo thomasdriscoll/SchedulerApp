@@ -1,24 +1,26 @@
 import React,{useState} from 'react';
 import {View,Text, StyleSheet} from 'react-native';
 import Button1 from '../atoms/Button1';
-import Form1 from '../atoms/Form1';
-import Form2 from '../atoms/Form2';
-import Form3 from '../atoms/Form3';
+import RegistrationForm1 from '../atoms/RegistrationForm1';
+import RegistrationForm2 from '../atoms/RegistrationForm2';
+import RegistrationForm3 from '../atoms/RegistrationForm3';
+import RegistrationForm4 from '../atoms/RegistrationForm4';
 
 export default function Registration({history}){
     const [form,setForm] = useState(0);
-    // setForm(0);
     // Keyboard.show()
 
-    console.log(form);
     if(form==1){
-        return <Form1 form={form} setForm={setForm}/>
+        return <RegistrationForm1 form={form} setForm={setForm}/>
     }
     else if(form==2){
-        return <Form2 form={form} setForm={setForm}/>
+        return <RegistrationForm2 form={form} setForm={setForm}/>
     }
     else if(form==3){
-        return <Form3 form={form} setForm={setForm}/>
+        return <RegistrationForm3 form={form} setForm={setForm}/>
+    }
+    else if(form==4){
+        return <RegistrationForm4 form={form} setForm={setForm}/>
     }
     return( 
         <View style={styles.container}>

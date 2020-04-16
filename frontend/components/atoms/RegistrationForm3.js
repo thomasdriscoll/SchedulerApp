@@ -22,8 +22,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        paddingHorizontal: '10%',
-        paddingVertical:'10%'
+        paddingHorizontal: '8%',
+        paddingVertical:'15%'
     },
     subCon: {
         // backgroundColor: 'red',
