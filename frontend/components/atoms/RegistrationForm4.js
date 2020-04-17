@@ -1,14 +1,28 @@
 import React from 'react';
 import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView } from 'react-native';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
-
+import * as Location from 'expo-location';
 // home
 
 // Entypo
 
 export default function RegistrationForm4({ setForm, form }) {
-    // const [homeInput,] = useState(null);
-    // const [errorMessage,setErrorMessage] = useState(null); 
+    const [inProgress, setInProgress] = useState(false)
+    const [address,setAddress] = useState('')
+    const [geocode,setGeocode] = useState('')
+    const [error, setError] = useState('')
+
+    const attemptGeocodeAsync = async () => {
+        setInProgress(true)
+        try {
+            let result = await Location.geocodeAsync(address);
+            setGeocode(result);
+        } catch (e) {
+            setError(e.message);
+        } finally {
+            setInProgress(false);
+        }
+    }
 
     return (
         <View style={styles.mainCon}>
@@ -29,8 +43,8 @@ export default function RegistrationForm4({ setForm, form }) {
 }
 
 const styles = StyleSheet.create({
-    mainCon:{
-        flex:1
+    mainCon: {
+        flex: 1
     },
     container: {
         flex: 1,
@@ -38,8 +52,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: '8%',
         paddingVertical: '15%',
-        zIndex:2,
-        backgroundColor:'red'
+        zIndex: 2,
+        backgroundColor: 'red'
     },
     subCon: {
         flexDirection: 'row',
@@ -91,4 +105,15 @@ const styles = StyleSheet.create({
         width: '10%'
     }
 })
+
+// _getLocationAsync = async () => {
+//     let { status } = await Permissions.askAsync(Permissions.LOCATION);
+//     if (status !== 'granted') {
+//         this.setState({
+//             errorMessage: 'Permission to access location was denied',
+//         });
+//     }
+//     let location = await Location.getCurrentPositionAsync({});
+//     this.setState({ location });
+// };
 
