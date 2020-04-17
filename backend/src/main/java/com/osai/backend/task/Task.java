@@ -5,23 +5,47 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data 
 @Entity
 public class Task {
 
     private @Id @GeneratedValue Long id;
+
+    @NotBlank(message = "Username is mandatory")
     private String username;
+
+    @NotBlank(message = "Task title is mandatory")
     private String title;
+
+    @NotNull(message = "# of minutes is mandatory")
     private int minute;
+
+    @NotNull(message = "# of hours is mandatory")
     private int hour;
+
+    @NotNull(message = "Mood is mandatory")
     private int mood;
+
+    @NotNull(message = "Energy is mandatory")
     private int energy;
+
+    @NotNull(message = "Inside is mandatory")
     private boolean inside;
+
+    @NotNull(message = "Inside is mandatory")
     private String location;
-    private int novelty;    
-    private String time_of_day;
+
+    @NotNull(message = "Temperature is mandatory")
     private float temperature; 
+
+    @NotBlank(message = "Time of day is mandatory")
+    private String time_of_day;
+
+    //Remaining values are initialized by the Task constructor
+    private int novelty;    
     private long right_child;
     private long left_child;
 
@@ -35,12 +59,9 @@ public class Task {
         int mood,
         int energy, 
         boolean inside,
-        String location, 
-        int novelty, 
-        String time_of_day,
-        float temperature, 
-        long right_child,
-        long left_child
+        String location,
+        float temperature,
+        String time_of_day 
     ){
         this.username = username;
         this.title = title;
@@ -50,11 +71,11 @@ public class Task {
         this.energy = energy;
         this.inside = inside;
         this.location = location;
-        this.novelty = novelty;
-        this.time_of_day = time_of_day;
         this.temperature = temperature;
-        this.right_child = right_child;
-        this.left_child = left_child;
+        this.time_of_day = time_of_day;
+        this.novelty = 10;
+        this.right_child = -1;
+        this.left_child = -1;
     }
 
     //Getters 

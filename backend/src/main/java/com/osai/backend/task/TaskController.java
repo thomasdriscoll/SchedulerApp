@@ -22,31 +22,31 @@ public class TaskController {
     }
 
     //Mappings
-    @PostMapping(path="/createTask")
+    @PostMapping(path="/api/task/createTask")
     public Task createTask(@RequestBody Task newTask){
         //Need to do sanitation on the input
         return repository.save(newTask);
     }
 
     //Get all -- mostly for testing
-    @GetMapping(path="/all")
+    @GetMapping(path="/api/task/all")
     public @ResponseBody Iterable<Task> getAllTasks(){
         return repository.findAll();
     }
     
-    @GetMapping("/getTaskById/{id}")
+    @GetMapping("/api/task/getTaskById/{id}")
     public Task getTaskById(@PathVariable long id) {
          return repository.findById(id).orElse(null);
     }
 
-    @DeleteMapping("/deleteTaskById/{id}") 
+    @DeleteMapping("/api/task/deleteTaskById/{id}") 
     public void deleteTaskById(@PathVariable long id) {
         if(repository.existsById(id)){
             repository.deleteById(id);
         }
     }
 
-    @PutMapping("/updateTaskById/{id}")
+    @PutMapping("/api/task/updateTaskById/{id}")
     public Task updateTaskById(@RequestBody Task newTask, @PathVariable long id) {
         return repository.findById(id)
             .map(task -> {
