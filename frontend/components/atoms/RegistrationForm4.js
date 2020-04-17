@@ -1,31 +1,41 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView } from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Button } from 'react-native';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
-import * as Location from 'expo-location';
-// home
+import axios from 'axios';
+// import { Permissions, Location } from 'expo';
+// import MapView from 'react-native-maps';
+// import Geocoder from 'react-native-geocoding';
 
-// Entypo
+
 
 export default function RegistrationForm4({ setForm, form }) {
-    const [inProgress, setInProgress] = useState(false)
-    const [address,setAddress] = useState('')
-    const [geocode,setGeocode] = useState('')
-    const [error, setError] = useState('')
+    // const [inProgress, setInProgress] = useState(false)
+    const [address, setAddress] = useState('Eiffel Tower')
+    const [geocode, setGeocode] = useState({})
+    // const [error, setError] = useState('')
 
-    const attemptGeocodeAsync = async () => {
-        setInProgress(true)
-        try {
-            let result = await Location.geocodeAsync(address);
-            setGeocode(result);
-        } catch (e) {
-            setError(e.message);
-        } finally {
-            setInProgress(false);
-        }
+    // Geocoder.init("")
+
+    // Permissions.askAsync(Permissions.LOCATION);
+
+    const attemptGeocode = async() => {
+        // Geocoder.from(address)
+        // .then(json => {
+        //     const location = json.results[0].geometry.location;
+        //     console.log(location)
+        //     setGeocode(location)
+        // })
+        // .catch(error => console.warn(error));
+
+        let res = await axios.get('https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key='')
+
+        console.log(res);
+        // https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=YOUR_API_KEY
     }
 
     return (
         <View style={styles.mainCon}>
+            {/* <MapView style={styles.mapStyle} /> */}
             <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
                 <View style={styles.subCon}>
                     <View style={styles.prevIcon}>
@@ -36,6 +46,7 @@ export default function RegistrationForm4({ setForm, form }) {
                         <TextInput style={styles.inputText} placeholder="Set your home address" placeholderTextColor="rgba(255,255,255,0.9)" />
                     </View>
                 </View>
+                <Button title="Geocode" onPress={attemptGeocode}/>
                 <View style={styles.nextIcon}><Text onPress={() => setForm(form + 1)}><MaterialIcons size="40" color="white" name="navigate-next" /></Text></View>
             </KeyboardAvoidingView>
         </View>
@@ -46,6 +57,10 @@ const styles = StyleSheet.create({
     mainCon: {
         flex: 1
     },
+    mapStyle: {
+        // width: Dimensions.get('window').width,
+        // height: Dimensions.get('window').height,
+    },
     container: {
         flex: 1,
         backgroundColor: 'white',
@@ -53,7 +68,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: '8%',
         paddingVertical: '15%',
         zIndex: 2,
-        backgroundColor: 'red'
+        backgroundColor: 'blue'
     },
     subCon: {
         flexDirection: 'row',
