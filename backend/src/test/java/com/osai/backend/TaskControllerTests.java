@@ -66,7 +66,7 @@ public class TaskControllerTests {
     @Test 
     public void getAllTasks() throws Exception {
         controller.perform(MockMvcRequestBuilders
-            .get("/all")
+            .get("/api/task/all")
             .contentType(MediaType.APPLICATION_JSON)
             .characterEncoding("utf-8"))
         .andExpect(status().isOk())
@@ -94,7 +94,7 @@ public class TaskControllerTests {
         String expect_str = mapper.writeValueAsString(expect);
 
         controller.perform(MockMvcRequestBuilders
-            .post("/createTask")
+            .post("/api/task/createTask")
             .contentType(MediaType.APPLICATION_JSON)
             .content(expect_str)
             .characterEncoding("utf-8"))
@@ -116,7 +116,7 @@ public class TaskControllerTests {
     //     String expect_str = mapper.writeValueAsString(expect);
 
     //     controller.perform(MockMvcRequestBuilders
-    //         .post("/createTask")
+    //         .post("/api/task/createTask")
     //         .contentType(MediaType.APPLICATION_JSON)
     //         .content(expect_str)
     //         .characterEncoding("utf-8"))

@@ -100,7 +100,7 @@ public class TaskRepositoryTest {
         //then  
         assertEquals(expect, found, "/createTask - Incorrect return value from post");         // Assert that the return value is correct
         assertEquals(expect, persistFind, "/createTask - Saved result is not queryable");   // Assert that the value is retrievable from db
-    }
+    } 
 
     //Test for successful delete from repository
     @Test
