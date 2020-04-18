@@ -7,7 +7,7 @@ import javax.persistence.Id;
 
 @Data 
 @Entity
-public class User {
+public class Username {
 
 	private @GeneratedValue @Id Long id;
 	private String firstName;
@@ -15,24 +15,24 @@ public class User {
 	private String password;
 	private String email;
 	private String[] addresses;
-	private int active_tasks;
+	private int activeTasks;
 
-	User(){}
+	Username(){}
 
-	User(
+	Username(
 		String firstName,
 		String lastName,
 		String password,
 		String email,
 		String[] addresses,
-		int active_tasks
+		int activeTasks
 	) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.password = password;
 		this.email = email;
 		this.addresses = addresses;
-		this.active_tasks = active_tasks;
+		this.activeTasks = activeTasks;
 
 	};
 
@@ -50,7 +50,7 @@ public class User {
 		return this.password;
 	}
 	public int getActiveTasks() {
-		return this.active_tasks;
+		return this.activeTasks;
 	}
 	public String[] getAddresses() {
 		return this.addresses;
@@ -72,8 +72,8 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public void setActiveTasks(int active_tasks) {
-		this.active_tasks = active_tasks;
+	public void setActiveTasks(int activeTasks) {
+		this.activeTasks = activeTasks;
 	}
 	public void setAddress(String[] addresses) {
 		this.addresses = addresses;

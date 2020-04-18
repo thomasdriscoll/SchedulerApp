@@ -10,30 +10,30 @@ public class UserController {
         this.repository = repository;
     }
 
-    @PostMapping(path="/createUser")
-    public User createUser(@RequestBody User newUser) {
+    @PostMapping(path="/api/user/createUser")
+    public Username createUser(@RequestBody Username newUser) {
         return repository.save(newUser);
     }
 
-    @GetMapping(path="/all")
-    public @ResponseBody Iterable<User> getAllUsers() {
+    @GetMapping(path="/api/user/all")
+    public @ResponseBody Iterable<Username> getAllUsers() {
         return repository.findAll();
     }
 
-    @GetMapping("/getUserById/{id}")
-    public User getUserById(@PathVariable long id) {
+    @GetMapping("/api/user/getUserById/{id}")
+    public Username getUserById(@PathVariable long id) {
         return repository.findById(id).orElse(null);
     }
 
-    @DeleteMapping("/deleteUserById/{id}")
+    @DeleteMapping("/api/user/deleteUserById/{id}")
     public void deleteUserById(@PathVariable long id) {
         if (repository.existsById(id)) {
             repository.deleteById(id);
         }
     }
 
-    @PutMapping("/updateUserById/{id}")
-    public User updateUserById(@RequestBody User newUser, @PathVariable long id) {
+    @PutMapping("/api/user/updateUserById/{id}")
+    public Username updateUserById(@RequestBody Username newUser, @PathVariable long id) {
         return repository.findById(id).map(user -> {
             repository.deleteById(id);
             newUser.setId(id);
