@@ -1,3 +1,9 @@
+/*
+    Author: Thomas Driscoll
+    Date: 18 April 2020
+    Remaining work: 
+*/
+
 package com.osai.backend.task;
 
 import lombok.Data;
@@ -35,7 +41,7 @@ public class Task {
     @NotNull(message = "Inside is mandatory")
     private boolean inside;
 
-    @NotNull(message = "Inside is mandatory")
+    @NotBlank(message = "Inside is mandatory")
     private String location;
 
     @NotNull(message = "Temperature is mandatory")
