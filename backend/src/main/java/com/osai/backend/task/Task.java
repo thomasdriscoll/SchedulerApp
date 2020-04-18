@@ -35,7 +35,7 @@ public class Task {
     @NotNull(message = "Inside is mandatory")
     private boolean inside;
 
-    @NotNull(message = "Inside is mandatory")
+    @NotBlank(message = "Inside is mandatory")
     private String location;
 
     @NotNull(message = "Temperature is mandatory")

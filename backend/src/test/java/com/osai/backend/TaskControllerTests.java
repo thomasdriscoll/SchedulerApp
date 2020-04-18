@@ -31,7 +31,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(TaskController.class)
@@ -52,7 +51,8 @@ public class TaskControllerTests {
                 "123 Sesame St., Disney Land, CA 12345", 70, "afternoon");
         final List<Task> task_list = new ArrayList<Task>();
         task_list.add(task1); task_list.add(task2);
-        when(mockRepository.findAll()).thenReturn(task_list);    
+        when(mockRepository.findAll()).thenReturn(task_list);  
+        // when(mockRepository.findById(task1.getId()).orElse(null)).thenReturn(task1);
     }
     
     //Sanity check; loads controller for testing. If this breaks, either your controller doesn't compile or your test suite is wrong
@@ -72,7 +72,6 @@ public class TaskControllerTests {
         .andExpect(status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
         .andDo(MockMvcResultHandlers.print())
-        // .andExpect(MockMvcResultMatchers.jsonPath("$.tasks").exists())
         .andExpect(MockMvcResultMatchers.jsonPath("$.[*].id").exists())
         .andExpect(MockMvcResultMatchers.jsonPath("$.[0].title").value("Example Task 1"))
         .andExpect(MockMvcResultMatchers.jsonPath("$.[1].title").value("Example Task 2"));
@@ -103,25 +102,36 @@ public class TaskControllerTests {
         .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Example Task 1"));
     }
 
-    //Tests bad POST operation
-    // @Test 
-    // public void createTask_andFail_Test() throws Exception {
-        
-    //     Task expect;
+    // //Tests bad POST operation
+    @Test 
+    public void createTask_andFail_Test() throws Exception {
+        Task expect = new Task("thomasdriscoll", "Example Task 1", 5, 0, 5, 3, true,
+        "", (float) 70, "");
 
-    //     //Put task in database
-    //     when(mockRepository.save(expect)).thenReturn(expect);
-    //     //JSONify Task_list
-    //     ObjectMapper mapper = new ObjectMapper();
-    //     String expect_str = mapper.writeValueAsString(expect);
+        //Put task in database
+        when(mockRepository.save(expect)).thenReturn(expect);
+        //JSONify Task_list
+        ObjectMapper mapper = new ObjectMapper();
+        String expect_str = mapper.writeValueAsString(expect);
 
-    //     controller.perform(MockMvcRequestBuilders
-    //         .post("/api/task/createTask")
-    //         .contentType(MediaType.APPLICATION_JSON)
-    //         .content(expect_str)
-    //         .characterEncoding("utf-8"))
-    //     .andExpect(status().isOk())
-    //     .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
-    //     .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Example Task 1"));
+        controller.perform(MockMvcRequestBuilders
+            .post("/api/task/createTask")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(expect_str)
+            .characterEncoding("utf-8"))
+        .andExpect(status().isBadRequest());
+    }
+
+    // @Test
+    // // public void getTaskById_andReturnTask() throws Exception{
+        // controller.perform(MockMvcRequestBuilders
+        //     .get("/api/task/id/1")
+        //     .contentType(MediaType.APPLICATION_JSON)
+        //     .characterEncoding("utf-8"))
+        // .andExpect(status().isOk());
+        // .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+        // .andDo(MockMvcResultHandlers.print())
+        // .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
+        // .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Example Task 1"));
     // }
 }
