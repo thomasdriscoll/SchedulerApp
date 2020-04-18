@@ -6,12 +6,12 @@ export default function RegistrationForm2({ setForm, form }) {
     // Keyboard.show()
     return (
         <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-            <View style={styles.prevIcon}><Text onPress={() => setForm(form - 1)}><MaterialIcons size="35" color="white" name="navigate-next" /></Text></View>
+            <View style={styles.prevIcon}><Text onPress={() => setForm(form - 1)}><MaterialIcons size={35} color="white" name="navigate-next" /></Text></View>
             <View style={styles.subCon}>
                 <Text style={styles.text}>What's your email?</Text>
                 <TextInput style={styles.input} autoFocus={true} keyboardType='email-address' placeholder="Your email" selectionColor="white" placeholderTextColor="rgba(255,255,255,0.5)" />
             </View>
-            <View style={styles.nextIcon}><Text onPress={() => setForm(form + 1)}><MaterialIcons size="40" color="white" name="navigate-next" /></Text></View>
+            <View style={styles.nextIcon}><Text onPress={() => setForm(form + 1)}><MaterialIcons size={40} color="white" name="navigate-next" /></Text></View>
         </KeyboardAvoidingView>
     )
 }

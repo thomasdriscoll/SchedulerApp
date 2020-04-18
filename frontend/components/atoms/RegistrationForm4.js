@@ -60,16 +60,16 @@ export default function RegistrationForm4({ setForm, form }) {
             <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
                 <View style={styles.subCon}>
                     <View style={styles.prevIcon}>
-                        <Text onPress={() => setForm(form - 1)}><MaterialIcons size="35" color="white" name="navigate-next" /></Text>
+                        <Text onPress={() => setForm(form - 1)}><MaterialIcons size={35} color="white" name="navigate-next" /></Text>
                     </View>
                     <View style={styles.input}>
-                        <MaterialCommunityIcons size="20" color="rgba(255,255,255,0.9)" name="magnify" />
+                        <MaterialCommunityIcons size={20} color="rgba(255,255,255,0.9)" name="magnify" />
                         <TextInput style={styles.inputText} placeholder="Set your home address" placeholderTextColor="rgba(255,255,255,0.9)" />
                         {/* <GooglePlacesInput/> */}
                     </View>
                 </View>
                 {/* <Button title="Geocode" onPress={attemptGeocode} /> */}
-                <LinearGradient style={styles.nextIcon} colors={['#A12CF5','#8E29FA', '#8327FC']} disabled><Text onPress={() => setForm(form + 1)}><MaterialIcons size="40" color="white" name="navigate-next" /></Text></LinearGradient>
+                <LinearGradient style={styles.nextIcon} colors={['#A12CF5','#8E29FA', '#8327FC']} disabled><Text onPress={() => setForm(form + 1)}><MaterialIcons size={40} color="white" name="navigate-next" /></Text></LinearGradient>
             </KeyboardAvoidingView>
         </View>
     )
@@ -80,14 +80,13 @@ const styles = StyleSheet.create({
         flex: 1
     },
     mapStyle: {
+        flex:1,
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
-        zIndex: 2,
         position: "absolute",
         // top:0,
     },
     container: {
-        zIndex: 1,
         flex: 1,
         backgroundColor: 'white',
         justifyContent: 'space-between',
