@@ -1,3 +1,9 @@
+/*
+    Author: Thomas Driscoll
+    Date: 18 April 2020
+    Remaining work: PUT pass/fail tests. Low priority (all functionality is tested in other unit tests)
+*/
+
 package com.osai.backend;
 
 import static org.junit.jupiter.api.Assertions.*;
