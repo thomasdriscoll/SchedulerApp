@@ -1,29 +1,27 @@
-import * as React from 'react';
-import 'react-native-gesture-handler';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import { GetTask} from './components/molecules/getTask';
-import { CreateTask } from './components/molecules/createTask';
-
-const Stack = createStackNavigator();
-
-global.position = 0;
+import React, { useState } from 'react';
+import { View, Text } from 'react-native';
+import { NativeRouter } from 'react-router-native';
+import Registration from './components/molecules/Registration';
+import routes from './routes';
+import Navbar from './components/molecules/Navbar';
+import GooglePlacesInput from './components/atoms/GooglePlacesInput';
 
 export default function App() {
+  const [loggedIn, setLoggedIn] = useState(false)
+  if (!loggedIn) {
+    return (
+      <Registration/>
+      // <View style={{padding:'10%'}}>
+      //   <GooglePlacesInput/>
+      // </View>
+    )
+  }
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="GetTask">
-        <Stack.Screen 
-          name = "GetTask"
-          component = {GetTask}
-          options = {{}}
-        />
-        <Stack.Screen
-          name = "CreateTask"
-          component = {CreateTask}
-          options = {{}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+    <NativeRouter>
+      <View>
+        {routes}
+        <Navbar />
+      </View>
+    </NativeRouter>
+  )
 }
