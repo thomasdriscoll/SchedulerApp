@@ -3,34 +3,17 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Button, Dimensions } from 'react-native';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
-import axios from 'axios';
-// import { Permissions, Location } from 'expo';
 import MapView from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
-import GooglePlacesInput from './GooglePlacesInput';
 import {LinearGradient} from 'expo-linear-gradient';
-// import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import GooglePlacesInput from './../atoms/GooglePlacesInput';
 
 export default function RegistrationForm4({ setForm, form }) {
-    // const [inProgress, setInProgress] = useState(false)
     const [address, setAddress] = useState('Eiffel Tower')
     const [geocode, setGeocode] = useState({})
-    // const [error, setError] = useState('')
 
     Geocoder.init()
 
-    // Permissions.askAsync(Permissions.LOCATION);
-
-    const attemptGeocode = async () => {
-        Geocoder.from(address)
-            .then(json => {
-                const location = json.results[0].geometry.location;
-                console.log(location)
-                setGeocode(location)
-            })
-            .catch(error => console.warn(error));
-        // https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=YOUR_API_KEY
-    }
 
     return (
         <View style={styles.mainCon}>
@@ -41,7 +24,6 @@ export default function RegistrationForm4({ setForm, form }) {
                     longitude: -0.037790,
                     latitudeDelta: 0.01,
                     longitudeDelta: 0.01,
-
                 }}
                 customMapStyle={customMapStyle}
                 showCompass={true}
@@ -62,13 +44,7 @@ export default function RegistrationForm4({ setForm, form }) {
                     <View style={styles.prevIcon}>
                         <Text onPress={() => setForm(form - 1)}><MaterialIcons size={35} color="white" name="navigate-next" /></Text>
                     </View>
-                    <View style={styles.input}>
-                        <MaterialCommunityIcons size={20} color="rgba(255,255,255,0.9)" name="magnify" />
-                        <TextInput style={styles.inputText} placeholder="Set your home address" placeholderTextColor="rgba(255,255,255,0.9)" />
-                        {/* <GooglePlacesInput/> */}
-                    </View>
                 </View>
-                {/* <Button title="Geocode" onPress={attemptGeocode} /> */}
                 <LinearGradient style={styles.nextIcon} colors={['#A12CF5','#8E29FA', '#8327FC']} disabled><Text onPress={() => setForm(form + 1)}><MaterialIcons size={40} color="white" name="navigate-next" /></Text></LinearGradient>
             </KeyboardAvoidingView>
         </View>
@@ -142,7 +118,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         transform: [{ rotate: '180deg' }],
-        width: '10%'
+        width: '10%',
+        position: 'absolute',
+        left:'1%'
+        // right: '50%'
     }
 })
 
