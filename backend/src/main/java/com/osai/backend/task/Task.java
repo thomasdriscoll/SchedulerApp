@@ -1,3 +1,9 @@
+/*
+    Author: Thomas Driscoll
+    Date: 18 April 2020
+    Remaining work: 
+*/
+
 package com.osai.backend.task;
 
 import lombok.Data;
