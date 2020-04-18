@@ -25,6 +25,7 @@ export default function GooglePlacesInput({ form, setForm }) {
                                 style={styles.inputText}
                                 onChangeText={handleTextChange}
                                 placeholderTextColor='rgba(255,255,255,0.8)'
+                                autoFocus={true}
                             />
                         </View>
                         <ScrollView style={styles.resultCon}>
