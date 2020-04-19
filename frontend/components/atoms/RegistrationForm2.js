@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -21,7 +21,7 @@ export default function RegistrationForm2({ setForm, form, setEmail, email }) {
     }
 
     return (
-        <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <KeyboardAvoidingView style={styles.container} behavior={Platform.select({android: undefined, ios: 'padding'})} enabled>
             <View style={styles.prevIcon}><Text onPress={() => setForm(form - 1)}><MaterialIcons size={35} color="white" name="navigate-next" /></Text></View>
             <View style={styles.subCon}>
                 <Text style={styles.text}>What's your email?</Text>
@@ -33,7 +33,7 @@ export default function RegistrationForm2({ setForm, form, setEmail, email }) {
                 placeholderTextColor="rgba(255,255,255,0.5)"
                 onChangeText={setEmail}
                 value={email} 
-                autoCapitalize={false}/>
+                autoCapitalize="none"/>
             </View>
             {validate(email)}
         </KeyboardAvoidingView>

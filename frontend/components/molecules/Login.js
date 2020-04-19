@@ -12,10 +12,10 @@ export default function Login({setRenderLogin}){
     if(form==0){
         setRenderLogin(false)
     }
-    if(form==1){
+    else if(form==1){
         return <RegistrationForm2 form={form} setForm={setForm} email={email} setEmail={setEmail}/>
     }
-    if(form==2){
+    else if(form==2){
         return <PasswordForm2 form={form} setForm={setForm} password={password} setPassword={setPassword}/>
     }
 

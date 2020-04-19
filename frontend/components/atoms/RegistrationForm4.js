@@ -1,7 +1,7 @@
 // require.('dotenv').config()
 
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Button, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Button, Dimensions , Platform} from 'react-native';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import MapView from 'react-native-maps';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -34,7 +34,7 @@ export default function RegistrationForm4({ setForm, form, address, geocode }) {
         />
       </MapView>
 
-      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+      <KeyboardAvoidingView style={styles.container} behavior={Platform.select({android: undefined, ios: 'padding'})} enabled>
         <View style={styles.subCon}>
           <View style={styles.prevIcon}>
             <Text onPress={() => setForm(form - 1)}><MaterialIcons size={35} color="white" name="navigate-next" /></Text>

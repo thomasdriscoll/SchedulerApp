@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'black',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     subCon2: {
         position: "absolute",

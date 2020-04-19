@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -16,7 +16,7 @@ export default function RegistrationForm3({ setForm, form, password, setPassword
     }
 
     return (
-        <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <KeyboardAvoidingView style={styles.container} behavior={Platform.select({android: undefined, ios: 'padding'})} enabled>
             <View style={styles.prevIcon}><Text onPress={() => setForm(form - 1)}><MaterialIcons size={35} color="white" name="navigate-next" /></Text></View>
             <View style={styles.subCon}>
                 <Text style={styles.text}>Choose your password</Text>

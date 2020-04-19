@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { GoogleAutoComplete } from 'react-native-google-autocomplete';
 
 import API_KEY from './../../key';
@@ -10,7 +10,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 export default function GooglePlacesInput({ form, setForm, setAddress, address }) {
     return (
-        <KeyboardAvoidingView style={styles.container} behavior="padding">
+        <KeyboardAvoidingView style={styles.container} behavior={Platform.select({android: undefined, ios: 'padding'})}>
             <View style={styles.subCon}>
                 <View style={styles.prevIcon}><Text onPress={() => setForm(form - 1)}><MaterialIcons size={35} color="white" name="navigate-next" /></Text></View>
                 <Text style={styles.text}>Set your Home Address</Text>
