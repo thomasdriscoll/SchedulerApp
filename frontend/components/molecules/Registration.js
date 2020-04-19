@@ -9,7 +9,7 @@ import RegistrationForm3 from '../atoms/RegistrationForm3';
 import RegistrationForm4 from '../atoms/RegistrationForm4';
 import GooglePlacesInput from '../atoms/GooglePlacesInput';
 
-export default function Registration({ setRenderLogin }) {
+export default function Registration({ setRenderLogin, loggedIn, setLoggedIn, register }) {
     const [form, setForm] = useState(0);
     const [name,setName] = useState('');
     const [email,setEmail] = useState('');
@@ -29,13 +29,13 @@ export default function Registration({ setRenderLogin }) {
         return <RegistrationForm3 form={form} setForm={setForm} password={password} setPassword={setPassword}/>
     }
     else if (form == 4) {
-        return <GooglePlacesInput form={form} setForm={setForm} address={address} setAddress={setAddress} />
+        return <GooglePlacesInput form={form} setForm={setForm} address={address} setAddress={setAddress} loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
     }
     else if (form == 5) {
 
         if (geocode.lat) {
             return (
-                <RegistrationForm4 form={form} setForm={setForm} address={address} geocode={geocode} />
+                <RegistrationForm4 form={form} setForm={setForm} address={address} geocode={geocode} name={name} email={email} password={password}/>
             )
         }
 

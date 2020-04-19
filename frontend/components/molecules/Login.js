@@ -3,7 +3,7 @@ import {View,Text} from 'react-native';
 import RegistrationForm2 from './../atoms/RegistrationForm2';
 import PasswordForm2 from './../atoms/PasswordForm2';
 
-export default function Login({setRenderLogin}){
+export default function Login({setRenderLogin,login}){
 
     const [form,setForm] = useState(1);
     const [email,setEmail] = useState('');
@@ -16,7 +16,7 @@ export default function Login({setRenderLogin}){
         return <RegistrationForm2 form={form} setForm={setForm} email={email} setEmail={setEmail}/>
     }
     else if(form==2){
-        return <PasswordForm2 form={form} setForm={setForm} password={password} setPassword={setPassword}/>
+        return <PasswordForm2 form={form} setForm={setForm} password={password} setPassword={setPassword} login={login} email={email}/>
     }
 
     return(

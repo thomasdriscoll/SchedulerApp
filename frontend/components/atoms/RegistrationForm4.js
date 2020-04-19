@@ -6,7 +6,7 @@ import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import MapView from 'react-native-maps';
 import { LinearGradient } from 'expo-linear-gradient';
 
-export default function RegistrationForm4({ setForm, form, address, geocode }) {
+export default function RegistrationForm4({ setForm, form, address, geocode, name, email, password }) {
 
   
 
@@ -40,7 +40,7 @@ export default function RegistrationForm4({ setForm, form, address, geocode }) {
             <Text onPress={() => setForm(form - 1)}><MaterialIcons size={35} color="white" name="navigate-next" /></Text>
           </View>
         </View>
-        <LinearGradient style={styles.nextIcon} colors={['#A12CF5', '#8E29FA', '#8327FC']} ><Text onPress={() => setForm(form)}><MaterialIcons size={40} color="white" name="navigate-next" /></Text></LinearGradient>
+        <LinearGradient style={styles.nextIcon} colors={['#A12CF5', '#8E29FA', '#8327FC']} ><Text onPress={() => register(name,email,password,geocode)}><MaterialIcons size={40} color="white" name="navigate-next" /></Text></LinearGradient>
       </KeyboardAvoidingView>
     </View>
   )
