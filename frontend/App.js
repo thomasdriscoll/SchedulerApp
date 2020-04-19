@@ -4,7 +4,6 @@ import { NativeRouter } from 'react-router-native';
 import Registration from './components/molecules/Registration';
 import routes from './routes';
 import Navbar from './components/molecules/Navbar';
-import GooglePlacesInput from './components/atoms/GooglePlacesInput';
 import Login from './components/molecules/Login';
 
 export default function App() {
@@ -13,7 +12,7 @@ export default function App() {
 
   if (!loggedIn) {
     if(renderLogin){
-      return <Login/>
+      return <Login setRenderLogin={setRenderLogin}/>
     }
     return (
       <Registration setRenderLogin={setRenderLogin}/>
