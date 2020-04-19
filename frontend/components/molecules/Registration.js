@@ -9,7 +9,7 @@ import RegistrationForm3 from '../atoms/RegistrationForm3';
 import RegistrationForm4 from '../atoms/RegistrationForm4';
 import GooglePlacesInput from '../atoms/GooglePlacesInput';
 
-export default function Registration({ history }) {
+export default function Registration({ setRenderLogin }) {
     const [form, setForm] = useState(0);
     const [name,setName] = useState('');
     const [email,setEmail] = useState('');
@@ -59,7 +59,7 @@ export default function Registration({ history }) {
                 <Button1 text={`Let's go!`} onPress={() => setForm(form + 1)} />
             </View>
             <View style={styles.subCon2}>
-                <Text style={styles.signInRedirect} onPress={() => console.log('sign redirect hit')}>Already have a Schedelta account? Sign in</Text>
+                <Text style={styles.signInRedirect} onPress={() => setRenderLogin(true)}>Already have a Schedelta account? Sign in</Text>
             </View>
         </View>
     )
