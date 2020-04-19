@@ -17,9 +17,9 @@ public class Username {
 	private String[] addresses;
 	private int activeTasks;
 
-	Username(){}
+	public Username(){}
 
-	Username(
+	public Username(
 		String firstName,
 		String lastName,
 		String password,

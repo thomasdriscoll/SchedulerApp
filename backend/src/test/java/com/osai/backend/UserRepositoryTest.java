@@ -41,15 +41,15 @@ public class UserRepositoryTest {
         //when
         List<Username> foundList;
         List<Username> expectedList = new ArrayList<>();
-        foundlist = repository.findAll();
-        Username[] found = foundlist.toArray(new Username[2]);
+        foundList = repository.findAll();
+        Username[] found = foundList.toArray(new Username[2]);
         expectedList.add(one);
         expectedList.add(two);
-        Username[] expected = expectedlist.toArray(new Username [2]);
+        Username[] expected = expectedList.toArray(new Username [2]);
 
         //then
         assertArrayEquals(found, expected,
-                "/api/user/all - Found" + foundlist.toString() + " does not equal expected " + expectedlist.toString());
+                "/api/user/all - Found" + foundList.toString() + " does not equal expected " + expectedList.toString());
     }
 
     //Successful test for finding task by id
@@ -116,7 +116,7 @@ public class UserRepositoryTest {
         assertEquals(expect, found, "/api/user/deleteById - save failed");
 
         //when
-        repository.deleteById/(expect.getId());
+        repository.deleteById(expect.getId());
         boolean exists = repository.existsById(expect.getId());
         assertEquals(false, exists, "/api/user/deleteById - delete failed");
     }
@@ -168,7 +168,7 @@ public class UserRepositoryTest {
                     repository.deleteById(id);
                     return repository.save(expect);
                 }).orElseGet(() -> {
-                    return repository.save(expect)
+                    return repository.save(expect);
                 });
         //then
         assertEquals(expect, found, "/api/user/updateTaskById - did not update");
