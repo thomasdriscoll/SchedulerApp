@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, KeyboardAvoidingView } from 'react-native';
 import { GoogleAutoComplete } from 'react-native-google-autocomplete';
 
 import API_KEY from './../../key';
@@ -8,9 +8,9 @@ import LocationItem from './LocationItem';
 import { MaterialIcons } from '@expo/vector-icons';
 
 
-export default function GooglePlacesInput({ form, setForm }) {
+export default function GooglePlacesInput({ form, setForm, setAddress, address }) {
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
             <View style={styles.subCon}>
                 <View style={styles.prevIcon}><Text onPress={() => setForm(form - 1)}><MaterialIcons size={35} color="white" name="navigate-next" /></Text></View>
                 <Text style={styles.text}>Set your Home Address</Text>
@@ -23,17 +23,24 @@ export default function GooglePlacesInput({ form, setForm }) {
                             <TextInput
                                 placeholder="Set your home address"
                                 style={styles.inputText}
-                                onChangeText={handleTextChange}
+                                onChangeText={text=>{
+                                    handleTextChange(text)
+                                    setAddress(text)
+                                }}
                                 placeholderTextColor='rgba(255,255,255,0.8)'
                                 autoFocus={true}
+                                value={address}
                             />
                         </View>
                         <ScrollView style={styles.resultCon}>
                             {locationResults.map(el => (
                                 <LocationItem
-                                    description={el.description}
                                     el={el}
-                                    key={el.id} />
+                                    key={el.id} 
+                                    setAddress={setAddress}
+                                    form={form}
+                                    setForm={setForm}
+                                    />
                             )
 
                             )}
@@ -42,7 +49,8 @@ export default function GooglePlacesInput({ form, setForm }) {
 
                 }
             </GoogleAutoComplete>
-        </View>
+            <View style={styles.nextIcon}><Text onPress={() => setForm(form + 1)}><MaterialIcons size={40} color="white" name="navigate-next" /></Text></View>
+        </KeyboardAvoidingView>
     )
 }
 
@@ -96,5 +104,17 @@ const styles = StyleSheet.create({
     },
     resultCon:{
         width:'100%',
+    },
+    nextIcon: {
+        backgroundColor: 'rgba(100,100,100,0.9)',
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 0,
+        position:'relative',
+        left:'80%',
+        top:'15%'
     }
 })

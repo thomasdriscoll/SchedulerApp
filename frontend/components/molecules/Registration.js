@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Button1 from '../atoms/Button1';
+import Geocoder from 'react-native-geocoding';
+import API_KEY from './../../key';
 import RegistrationForm1 from '../atoms/RegistrationForm1';
 import RegistrationForm2 from '../atoms/RegistrationForm2';
 import RegistrationForm3 from '../atoms/RegistrationForm3';
@@ -9,6 +11,12 @@ import GooglePlacesInput from '../atoms/GooglePlacesInput';
 
 export default function Registration({ history }) {
     const [form, setForm] = useState(0);
+    const [address, setAddress] = useState('');
+    const [geocode, setGeocode] = useState({});
+    const [name,setName] = useState('');
+    const [email,setEmail] = useState('');
+    const [password,setPassword] = useState('');
+    
     // Keyboard.show()
 
     if (form == 1) {
@@ -21,10 +29,27 @@ export default function Registration({ history }) {
         return <RegistrationForm3 form={form} setForm={setForm} />
     }
     else if (form == 4) {
-        return <GooglePlacesInput form={form} setForm={setForm}/>
+        return <GooglePlacesInput form={form} setForm={setForm} address={address} setAddress={setAddress} />
     }
     else if (form == 5) {
-        return <RegistrationForm4 form={form} setForm={setForm} />
+
+        if (geocode.lat) {
+            return (
+                <RegistrationForm4 form={form} setForm={setForm} address={address} geocode={geocode} />
+            )
+        }
+
+        else {
+            Geocoder.init(API_KEY);
+            Geocoder.from(address)
+                .then(json => {
+                    setGeocode(json.results[0].geometry.location);
+                })
+                .catch(error => console.warn(error));
+            return <View></View>
+        }
+
+
     }
     return (
         <View style={styles.container}>

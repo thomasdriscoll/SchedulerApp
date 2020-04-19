@@ -4,12 +4,16 @@ import { FontAwesome } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
-export default function LocationItem({ description, el }) {
+export default function LocationItem({ el, address, setAddress, form, setForm  }) {
+
+    const selectAddress = () => {
+        setAddress(el.description)
+        setForm(form+1)
+    }
 
     return (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={selectAddress}>
         <View style={styles.root}>
-            {console.log(el)}
             <FontAwesome name='map-marker' size={25} color='white' />
             <View style={styles.textCon}>
                 <Text style={styles.mainText}>{el.structured_formatting.main_text}</Text>
