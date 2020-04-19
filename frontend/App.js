@@ -11,9 +11,6 @@ export default function App() {
   if (!loggedIn) {
     return (
       <Registration/>
-      // <View style={{padding:'10%'}}>
-      //   <GooglePlacesInput/>
-      // </View>
     )
   }
   return (

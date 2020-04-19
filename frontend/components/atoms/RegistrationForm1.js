@@ -1,17 +1,37 @@
 import React from 'react';
 import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
-export default function RegistrationForm1({ setForm, form }) {
+
+export default function RegistrationForm1({ setForm, form, setName, name }) {
     // Keyboard.show()
+    
+    const nameValidator = () => {
+        if(name.length>0){
+            return <LinearGradient style={styles.nextIcon} colors={['#A12CF5', '#8E29FA', '#8327FC']}><View ><Text onPress={() => setForm(form + 1)}><MaterialIcons size={40} color="white" name="navigate-next" /></Text></View></LinearGradient>
+        }
+        else{
+            return <View style={styles.nextIcon}><Text><MaterialIcons size={40} color="white" name="navigate-next" /></Text></View>
+        }
+    }
+
     return (
         <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
             <View style={styles.prevIcon}><Text onPress={() => setForm(form - 1)}><MaterialIcons size={30} color="white" name="navigate-next" /></Text></View>
             <View style={styles.subCon}>
                 <Text style={styles.text}>What's your name?</Text>
-                <TextInput style={styles.input} autoFocus={true} keyboardType='default' placeholder="Your name" selectionColor="white" placeholderTextColor="rgba(255,255,255,0.5)" />
+                <TextInput
+                    style={styles.input}
+                    autoFocus={true}
+                    keyboardType='default'
+                    placeholder="Your name"
+                    selectionColor="white"
+                    placeholderTextColor="rgba(255,255,255,0.5)"
+                    onChangeText={setName}
+                    value={name} />
             </View>
-            <View style={styles.nextIcon}><Text onPress={() => setForm(form + 1)}><MaterialIcons size={40} color="white" name="navigate-next" /></Text></View>
+            {nameValidator()}
         </KeyboardAvoidingView>
     )
 }
@@ -20,11 +40,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'black',
-        flexDirection:'column',
+        flexDirection: 'column',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
         paddingHorizontal: '8%',
-        paddingVertical:'15%',
+        paddingVertical: '15%',
         // backgroundColor: 'red',
     },
     subCon: {
@@ -56,13 +76,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 0,
-        position:'relative',
-        left:'80%'
+        position: 'relative',
+        left: '80%'
     },
     prevIcon: {
         justifyContent: 'center',
         alignItems: 'center',
         transform: [{ rotate: '180deg' }],
-        
+
     }
 })

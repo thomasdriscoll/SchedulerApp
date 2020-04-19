@@ -11,22 +11,22 @@ import GooglePlacesInput from '../atoms/GooglePlacesInput';
 
 export default function Registration({ history }) {
     const [form, setForm] = useState(0);
-    const [address, setAddress] = useState('');
-    const [geocode, setGeocode] = useState({});
     const [name,setName] = useState('');
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
+    const [address, setAddress] = useState('');
+    const [geocode, setGeocode] = useState({});
     
     // Keyboard.show()
 
     if (form == 1) {
-        return <RegistrationForm1 form={form} setForm={setForm} />
+        return <RegistrationForm1 form={form} setForm={setForm} name={name} setName={setName}/>
     }
     else if (form == 2) {
-        return <RegistrationForm2 form={form} setForm={setForm} />
+        return <RegistrationForm2 form={form} setForm={setForm} email={email} setEmail={setEmail}/>
     }
     else if (form == 3) {
-        return <RegistrationForm3 form={form} setForm={setForm} />
+        return <RegistrationForm3 form={form} setForm={setForm} password={password} setPassword={setPassword}/>
     }
     else if (form == 4) {
         return <GooglePlacesInput form={form} setForm={setForm} address={address} setAddress={setAddress} />
