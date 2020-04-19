@@ -5,13 +5,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Button1({ text, onPress }) {
     return (
-        <LinearGradient colors={['#A12CF5', '#8E29FA', '#8327FC']}>
-            <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity onPress={onPress}>
+            <LinearGradient colors={['#A12CF5', '#8E29FA', '#8327FC']}>
                 <View style={styles.button}>
                     <Text style={styles.buttonText}>{text}</Text>
                 </View>
-            </TouchableOpacity>
-        </LinearGradient>
+            </LinearGradient>
+        </TouchableOpacity>
     )
 }
 
