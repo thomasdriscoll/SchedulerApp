@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,8 +35,11 @@ public class TaskController {
 
     //Mappings
     @PostMapping(path="/api/task/createTask")
-    public Task createTask(@Valid @RequestBody Task newTask){
-        return repository.save(newTask);
+    public void createTask(@Valid @RequestBody Task newTask){
+        List<Task> tree = repository.getTreeByUser(newTask.getUser(), new Sort("ancestry"));
+        return;
+        //Old CreateTask function
+        // return repository.save(newTask);
     }
 
     //Get all -- mostly for testing
@@ -54,6 +58,8 @@ public class TaskController {
              return found;
          }
     }
+    // Get best fit
+    // Return top 10 results
 
     @DeleteMapping("/api/task/deleteTaskById/{id}") 
     public void deleteTaskById(@PathVariable long id) {
@@ -77,4 +83,5 @@ public class TaskController {
                 return repository.save(newTask);
             });
     }
+
 }
