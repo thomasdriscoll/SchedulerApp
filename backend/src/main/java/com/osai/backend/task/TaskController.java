@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,11 +36,11 @@ public class TaskController {
 
     //Mappings
     @PostMapping(path="/api/task/createTask")
-    public void createTask(@Valid @RequestBody Task newTask){
-        List<Task> tree = repository.getTreeByUser(newTask.getUser(), new Sort("ancestry"));
-        return;
+    public Task createTask(@Valid @RequestBody Task newTask){
+        // List<Task> tree = repository.getTreeByUser(newTask.getUser());
+        // return;
         //Old CreateTask function
-        // return repository.save(newTask);
+        return repository.save(newTask);
     }
 
     //Get all -- mostly for testing
@@ -60,6 +61,11 @@ public class TaskController {
     }
     // Get best fit
     // Return top 10 results
+    @GetMapping("/api/task/bestTen/{username}")
+    public @ResponseBody List<Task> getBestTenTasks(String username){
+        List<Task> tree = repository.getTreeByUser(username);
+        return tree;
+    }
 
     @DeleteMapping("/api/task/deleteTaskById/{id}") 
     public void deleteTaskById(@PathVariable long id) {
