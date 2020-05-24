@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
-import java.util.List;
+// import java.util.List;
 
 import javax.validation.Valid;
 
@@ -62,8 +62,11 @@ public class TaskController {
     // Get best fit
     // Return top 10 results
     @GetMapping("/api/task/bestTen/{username}")
-    public @ResponseBody List<Task> getBestTenTasks(String username){
-        List<Task> tree = repository.getTreeByUser(username);
+    public @ResponseBody Iterable<Task> getBestTenTasks(String username){
+        Iterable<Task> tree = repository.getTreeByUser(username);
+        for(Task t : tree){
+            System.out.println(t);
+        }
         return tree;
     }
 
