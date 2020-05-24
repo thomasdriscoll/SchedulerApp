@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
+import java.util.ArrayList;
+// import java.util.Collection;
+
 // import java.util.List;
 
 import javax.validation.Valid;
@@ -37,8 +40,8 @@ public class TaskController {
     //Mappings
     @PostMapping(path="/api/task/createTask")
     public Task createTask(@Valid @RequestBody Task newTask){
-        // List<Task> tree = repository.getTreeByUser(newTask.getUser());
-        // return;
+        // Collection<Task> tree = repository.getTreeByUser(newTask.getUser());
+        //batch save 
         //Old CreateTask function
         return repository.save(newTask);
     }
@@ -63,10 +66,8 @@ public class TaskController {
     // Return top 10 results
     @GetMapping("/api/task/bestTen/{username}")
     public @ResponseBody Iterable<Task> getBestTenTasks(String username){
-        Iterable<Task> tree = repository.getTreeByUser(username);
-        for(Task t : tree){
-            System.out.println(t);
-        }
+        ArrayList<Task> tree = repository.getTreeByUser(username);
+        System.out.println(tree.get(0));
         return tree;
     }
 
