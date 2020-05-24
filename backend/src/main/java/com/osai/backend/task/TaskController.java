@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.List;
 // import java.util.Collection;
+import java.util.Random;
 
 // import java.util.List;
 
@@ -33,17 +36,22 @@ import org.springframework.web.server.ResponseStatusException;
 public class TaskController {
     private TaskRepository repository;
 
-    public TaskController(TaskRepository repository){
+    public TaskController(TaskRepository repository) {
         this.repository = repository;
     }
 
-    //Mappings
-    @PostMapping(path="/api/task/createTask")
-    public Task createTask(@Valid @RequestBody Task newTask){
-        // Collection<Task> tree = repository.getTreeByUser(newTask.getUser());
+    // Mappings
+    @PostMapping(path = "/api/task/createTask")
+    public List<Task> createTask(@Valid @RequestBody Task newTask) {
+        ArrayList<Task> tree = repository.getTreeByUser(newTask.getUser());
         //batch save 
+        byte[] array = new byte[7]; // length is bounded by 7
+        new Random().nextBytes(array);
+        String generatedString = new String(array, Charset.forName("UTF-8"));
+        tree.get(0).setTitle("Title: "+generatedString);
+        tree.add(newTask);
         //Old CreateTask function
-        return repository.save(newTask);
+        return repository.saveAll(tree);
     }
 
     //Get all -- mostly for testing
