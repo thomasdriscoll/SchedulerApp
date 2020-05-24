@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface TaskRepository extends JpaRepository<Task, Long>
 {
-    @Query("select t from Task t where t.username = ?1 and t.ancestry like \'1%\' or t.ancestry = \'none\'")
+    @Query("select t from Task t where t.username = ?1 ORDER BY t.ancestry ASC")
     ArrayList<Task> getTreeByUser(String username);
 }
 

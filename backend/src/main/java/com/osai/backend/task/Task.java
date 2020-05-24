@@ -27,10 +27,7 @@ public class Task {
     private String title;
 
     @NotNull(message = "# of minutes is mandatory")
-    private int minute;
-
-    @NotNull(message = "# of hours is mandatory")
-    private int hour;
+    private int time;
 
     @NotNull(message = "Mood is mandatory")
     private int mood;
@@ -41,7 +38,7 @@ public class Task {
     @NotNull(message = "Inside is mandatory")
     private boolean inside;
 
-    @NotBlank(message = "Inside is mandatory")
+    @NotBlank(message = "Location is mandatory")
     private String location;
 
     @NotNull(message = "Temperature is mandatory")
@@ -59,8 +56,7 @@ public class Task {
     public Task(   
         String username, 
         String title, 
-        int minute, 
-        int hour, 
+        int time, 
         int mood,
         int energy, 
         boolean inside,
@@ -70,8 +66,7 @@ public class Task {
     ){
         this.username = username;
         this.title = title;
-        this.minute = minute;
-        this.hour = hour;
+        this.time = time;
         this.mood = mood;
         this.energy = energy;
         this.inside = inside;
@@ -86,10 +81,7 @@ public class Task {
     public Long getId() { return this.id; }
     public String getUser() { return this.username; }
     public String getTitle(){ return this.title; }
-    public int[] getTime() { 
-        int[] time = {this.hour, this.minute}; 
-        return time;
-    }
+    public int getTime() { return this.time;  }
     public int getMood() { return this.mood; }
     public int getEnergy() { return this.energy; }
     public boolean getInside() { return this.inside; }
@@ -104,9 +96,8 @@ public class Task {
     public void setTitle(String title){ 
         this.title = title; 
     }
-    public void setTime(int hour, int minute) { 
-        this.hour = hour;
-        this.minute = minute;
+    public void setTime(int time) { 
+        this.time = time;
     }
     public void setMood(int mood) { 
         this.mood = mood; 
