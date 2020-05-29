@@ -14,6 +14,8 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+// https://stackoverflow.com/questions/3405229/specifying-an-index-non-unique-key-using-jpa
+// Very helpful
 @Data 
 @Entity
 public class Task {
@@ -38,8 +40,11 @@ public class Task {
     @NotNull(message = "Inside is mandatory")
     private boolean inside;
 
-    @NotBlank(message = "Location is mandatory")
-    private String location;
+    @NotNull(message = "Latitude is necessary")
+    private double latitude;
+
+    @NotNull(message = "Latitude is necessary")
+    private double longitude;
 
     @NotNull(message = "Temperature is mandatory")
     private float temperature; 
@@ -60,7 +65,8 @@ public class Task {
         int mood,
         int energy, 
         boolean inside,
-        String location,
+        double latitude,
+        double longitude,
         float temperature,
         String time_of_day 
     ){
@@ -70,7 +76,8 @@ public class Task {
         this.mood = mood;
         this.energy = energy;
         this.inside = inside;
-        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.temperature = temperature;
         this.time_of_day = time_of_day;
         this.novelty = 10;
@@ -85,7 +92,8 @@ public class Task {
     public int getMood() { return this.mood; }
     public int getEnergy() { return this.energy; }
     public boolean getInside() { return this.inside; }
-    public String getLocation() { return this.location; }
+    public double getLatitude() { return this.latitude; }
+    public double getLongitude() { return this.longitude; }
     public int getNovelty() { return this.novelty; }
     public String getTimeOfDay() { return this.time_of_day; }
     public float getTemperature() { return this.temperature; }
@@ -108,8 +116,9 @@ public class Task {
     public void setInside(boolean inside) { 
         this.inside = inside;
     }
-    public void setLocation(String location) { 
-        this.location = location; 
+    public void setLocation(double latitude, double longitude) { 
+        this.latitude = latitude; 
+        this.longitude = longitude;
     }
     public void setNovelty(int novelty) { 
         this.novelty = novelty; 

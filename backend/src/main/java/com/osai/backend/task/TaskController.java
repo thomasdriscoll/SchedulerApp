@@ -35,15 +35,69 @@ public class TaskController {
     // Mappings
     @PostMapping(path = "/api/task/createTask")
     public List<Task> createTask(@Valid @RequestBody Task newTask) {
-        ArrayList<Task> tree = repository.getTreeByUser(newTask.getUser());
-        tree = insertTask(tree, newTask, 0);
-        return repository.saveAll(tree);
+        ArrayList<Task> tasks = repository.getTreeByUser(newTask.getUser());
+        tasks.add(newTask);
+        ArrayList<Task> kdtree = new ArrayList<Task>();
+        insertTask(tasks, kdtree, "", 0);
 
-
-        //batch save 
-        //Old CreateTask function
+        return repository.saveAll(kdtree);
+        /*
+            Note: Probably would be a good idea to get rid of the switch statement in the insertTask function to create
+            an array of values in this function. That way, we could just preset the values to correspond to the task and just have O(1) lookup.
+            The trick is figuring out how to use the modulus function s.t. the indices always match up. Or that may be a limiting factor for the trees.
+            FOR INSTANCE: location/mood/time/energy are always going to be 1-4, I don't see a use case where they wouldn't be important. But novelty isn't always
+            important (I will be using it as a tie-breaker value probably), time_of_day may be more important and they'd both be fighting for that 5th position.
+            Good problem to solve later...
+        */
+    }
+   
+    public void insertTask(ArrayList<Task> tasks, ArrayList<Task> kdtree, String ancestry, int depth){
+        //Making an init tree
+        if(tasks.isEmpty()){
+            return;
+        }
+        int root = MedianOfMedians(tasks, depth);
+        ancestry = ancestry+tasks.get(root).getId()+".";
+        tasks.get(root).setAncestry(ancestry);
+        kdtree.add(tasks.get(root));
+        double cut = getDepthValue(depth, tasks.get(root));
+        tasks.remove(root);
+        ArrayList<Task> rightTree = getRightTree(tasks,cut);
+        //Left half of tree
+        insertTask(tasks, kdtree, ancestry, (depth+1)%4);       //4 because there are 4 cutting dimensions (time, mood, energy, location)
+        //Right half of Tree
+        insertTask(rightTree, kdtree, ancestry, (depth+1)%4);
+    
+    }
+    //Helper functions for insertTask
+    public int MedianOfMedians(ArrayList<Task> tasks, int depth){
+        return 0;
+    }
+   
+    public ArrayList<Task> getRightTree(ArrayList<Task> leftTree, double cut){
+        return null;
     }
 
+    public double getDepthValue(int depth, Task curr){
+        double taskValue =0;
+        switch(depth){
+            case 0:
+                taskValue = curr.getTime();
+            case 1:
+                taskValue = curr.getMood();
+            case 2:
+                taskValue = curr.getEnergy();
+            case 3:
+                taskValue = Math.sqrt(Math.pow(curr.getLatitude(), 2) + Math.pow(curr.getLongitude(), 2));
+        }
+        return taskValue;
+    }
+   
+   
+   
+   
+   
+   
     //Get all -- mostly for testing
     @GetMapping(path="/api/task/all")
     public @ResponseBody Iterable<Task> getAllTasks(){
@@ -95,21 +149,4 @@ public class TaskController {
     public void traverseTree(ArrayList<Task> tree, Task curr){
 
     }
-
-    public ArrayList<Task> insertTask(ArrayList<Task> tree, Task task, int depth){
-        //Making an init tree
-        if(tree.isEmpty()){
-            //Set ancestry of root to be the id of the root
-            task.setAncestry(String.valueOf(task.getId())); 
-            tree.add(task);
-            return tree;
-        }
-
-        //Current dimension of tree
-        // int[] values = []
-        int cd = depth % 7;
-
-        return tree;
-    }
-
 }
