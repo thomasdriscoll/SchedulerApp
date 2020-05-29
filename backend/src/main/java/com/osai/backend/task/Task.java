@@ -14,6 +14,8 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+// https://stackoverflow.com/questions/3405229/specifying-an-index-non-unique-key-using-jpa
+// Very helpful
 @Data 
 @Entity
 public class Task {
@@ -27,10 +29,7 @@ public class Task {
     private String title;
 
     @NotNull(message = "# of minutes is mandatory")
-    private int minute;
-
-    @NotNull(message = "# of hours is mandatory")
-    private int hour;
+    private int time;
 
     @NotNull(message = "Mood is mandatory")
     private int mood;
@@ -41,8 +40,11 @@ public class Task {
     @NotNull(message = "Inside is mandatory")
     private boolean inside;
 
-    @NotBlank(message = "Inside is mandatory")
-    private String location;
+    @NotNull(message = "Latitude is necessary")
+    private double latitude;
+
+    @NotNull(message = "Latitude is necessary")
+    private double longitude;
 
     @NotNull(message = "Temperature is mandatory")
     private float temperature; 
@@ -59,23 +61,23 @@ public class Task {
     public Task(   
         String username, 
         String title, 
-        int minute, 
-        int hour, 
+        int time, 
         int mood,
         int energy, 
         boolean inside,
-        String location,
+        double latitude,
+        double longitude,
         float temperature,
         String time_of_day 
     ){
         this.username = username;
         this.title = title;
-        this.minute = minute;
-        this.hour = hour;
+        this.time = time;
         this.mood = mood;
         this.energy = energy;
         this.inside = inside;
-        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.temperature = temperature;
         this.time_of_day = time_of_day;
         this.novelty = 10;
@@ -86,14 +88,12 @@ public class Task {
     public Long getId() { return this.id; }
     public String getUser() { return this.username; }
     public String getTitle(){ return this.title; }
-    public int[] getTime() { 
-        int[] time = {this.hour, this.minute}; 
-        return time;
-    }
+    public int getTime() { return this.time;  }
     public int getMood() { return this.mood; }
     public int getEnergy() { return this.energy; }
     public boolean getInside() { return this.inside; }
-    public String getLocation() { return this.location; }
+    public double getLatitude() { return this.latitude; }
+    public double getLongitude() { return this.longitude; }
     public int getNovelty() { return this.novelty; }
     public String getTimeOfDay() { return this.time_of_day; }
     public float getTemperature() { return this.temperature; }
@@ -104,9 +104,8 @@ public class Task {
     public void setTitle(String title){ 
         this.title = title; 
     }
-    public void setTime(int hour, int minute) { 
-        this.hour = hour;
-        this.minute = minute;
+    public void setTime(int time) { 
+        this.time = time;
     }
     public void setMood(int mood) { 
         this.mood = mood; 
@@ -117,8 +116,9 @@ public class Task {
     public void setInside(boolean inside) { 
         this.inside = inside;
     }
-    public void setLocation(String location) { 
-        this.location = location; 
+    public void setLocation(double latitude, double longitude) { 
+        this.latitude = latitude; 
+        this.longitude = longitude;
     }
     public void setNovelty(int novelty) { 
         this.novelty = novelty; 

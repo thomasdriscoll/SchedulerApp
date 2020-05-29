@@ -53,10 +53,10 @@ public class TaskControllerTests {
     // https://mkyong.com/spring-boot/mockito-how-to-mock-repository-findbyid-thenreturn-optional/
     @BeforeEach
     public void init() {
-        final Task task1 = new Task("thomasdriscoll", "Example Task 1", 5, 0, 5, 3, true,
-                "123 Sesame St., Disney Land, CA 12345", 70, "afternoon");
-        final Task task2 = new Task("thomasdriscoll", "Example Task 2", 5, 0, 5, 3, true,
-                "123 Sesame St., Disney Land, CA 12345", 70, "afternoon");
+        final Task task1 = new Task("thomasdriscoll", "Example Task 1", 5, 5, 3, true,
+                80.0, 100.2, 70, "afternoon");
+        final Task task2 = new Task("thomasdriscoll", "Example Task 2", 5, 0, 5, true,
+                80.0, 100.2, 70, "afternoon");
         task1.setId((long) 1);
         task2.setId((long) 2);
         final List<Task> task_list = new ArrayList<Task>();
@@ -95,8 +95,8 @@ public class TaskControllerTests {
     @Test
     public void createTaskTest() throws Exception {
 
-        Task expect = new Task("thomasdriscoll", "Example Task 1", 5, 0, 5, 3, true,
-        "123 Sesame St., Disney Land, CA 12345", (float) 70, "afternoon");
+        Task expect = new Task("thomasdriscoll", "Example Task 1", 5, 0, 3, true,
+        80.0, 100.2, (float) 70, "afternoon");
 
         //Put task in database
         when(mockRepository.save(expect)).thenReturn(expect);
@@ -117,8 +117,8 @@ public class TaskControllerTests {
     // Tests bad POST operation
     @Test 
     public void createTask_andFail_Test() throws Exception {
-        Task expect = new Task("thomasdriscoll", "Example Task 1", 5, 0, 5, 3, true,
-        "", (float) 70, "");
+        Task expect = new Task("thomasdriscoll", "Example Task 1", 5, 0, 5, true,
+        80.0, 100.2, (float) 70, "");
 
         //Put task in database
         when(mockRepository.save(expect)).thenReturn(expect);
