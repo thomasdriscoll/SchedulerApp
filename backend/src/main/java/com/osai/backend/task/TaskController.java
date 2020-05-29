@@ -5,7 +5,6 @@
 */
 package com.osai.backend.task;
 
-
 // import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -56,13 +56,15 @@ public class TaskController {
         if(tasks.isEmpty()){
             return;
         }
-        int root = MedianOfMedians(tasks, depth);
+        // Find the median element of the current array, set its ancestry and add it to the kdtree, removing it from the other
+        int root = MedianOfMedians(tasks, depth);                       //O(n)
         ancestry = ancestry+tasks.get(root).getId()+".";
         tasks.get(root).setAncestry(ancestry);
         kdtree.add(tasks.get(root));
-        double cut = getDepthValue(depth, tasks.get(root));
+        double cut = getDepthValue(depth, tasks.get(root));             //O(1)
         tasks.remove(root);
-        ArrayList<Task> rightTree = getRightTree(tasks,cut);
+        // divide the tree into two
+        ArrayList<Task> rightTree = getRightTree(tasks,cut, depth);     // O(n)
         //Left half of tree
         insertTask(tasks, kdtree, ancestry, (depth+1)%4);       //4 because there are 4 cutting dimensions (time, mood, energy, location)
         //Right half of Tree
@@ -74,8 +76,17 @@ public class TaskController {
         return 0;
     }
    
-    public ArrayList<Task> getRightTree(ArrayList<Task> leftTree, double cut){
-        return null;
+    public ArrayList<Task> getRightTree(ArrayList<Task> leftTree, double cut, int depth){
+        Iterator<Task> iterator = leftTree.iterator();
+        ArrayList<Task> rightTree = new ArrayList<Task>();
+        while(iterator.hasNext()){
+            Task curr = iterator.next();
+            if(getDepthValue(depth, curr) >= cut){
+                rightTree.add(curr);
+                iterator.remove();
+            }
+        }
+        return rightTree;
     }
 
     public double getDepthValue(int depth, Task curr){
@@ -92,11 +103,7 @@ public class TaskController {
         }
         return taskValue;
     }
-   
-   
-   
-   
-   
+      
    
     //Get all -- mostly for testing
     @GetMapping(path="/api/task/all")
