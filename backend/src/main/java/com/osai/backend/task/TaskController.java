@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+//import java.util.List;
 
 import javax.validation.Valid;
 
@@ -70,9 +70,41 @@ public class TaskController {
     
     }
     //Helper functions for insertTask
-    public int MedianOfMedians(ArrayList<Task> tasks, int depth){
+    public int MedianOfMedians(ArrayList<Task> tasks, int k) {
+        int numBlocks = tasks.size() / 5;
+        int mom;
+        ArrayList<Task> medians;
+        start_index = 0;
+        end_index = 4;
+
+        for (int i = 1; i <= numBlocks; i++) {
+            ArrayList<Task> subList;
+            if (start_index < tasks.size() && end_index < tasks.size()) {
+                subList = tasks.subList(start_index, end_index);
+                start_index += 5;
+                end_index += 5;
+            }
+            else {
+                subList = tasks.subList(start_index, tasks.size() - 1); //for last block, may have less than five
+            }
+            medians.add(MedianOfFive(subList, k));
+        }
+
+        // mom = MedianOfMedians(medians, numBlocks / 2) — not sure about this part of the pseudo yet
         return 0;
     }
+
+    public Task MedianOfFive(ArrayList<Task> subList, int depth) {
+        Collections.sort(subList, new Comparator<Task>() {
+            @Override
+            public int compare(Task task1, Task task2) {
+                return getDepthValue(depth, task1).compareTo(getDepthValue(depth, task2));
+            }
+        });
+        return subList.get(2);
+    }
+
+    public Task partition()
    
     public ArrayList<Task> getRightTree(ArrayList<Task> leftTree, double cut){
         return null;
