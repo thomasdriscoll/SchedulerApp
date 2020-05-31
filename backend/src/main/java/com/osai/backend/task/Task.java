@@ -132,8 +132,8 @@ public class Task {
     public void setAncestry(String ancestry) {
         this.ancestry = ancestry;
     }
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(long i) {
+        this.id = i;
     }
 
 }

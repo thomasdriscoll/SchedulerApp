@@ -66,7 +66,7 @@ public class TaskController {
         // divide the tree into two
         ArrayList<Task> rightTree = getRightTree(tasks,cut, depth);     // O(n)
         //Left half of tree
-        insertTask(tasks, kdtree, ancestry, (depth+1)%4);       //4 because there are 4 cutting dimensions (time, mood, energy, location)
+        insertTask(tasks, kdtree, ancestry, (depth+1)%4);               //4 because there are 4 cutting dimensions (time, mood, energy, location)
         //Right half of Tree
         insertTask(rightTree, kdtree, ancestry, (depth+1)%4);
     
@@ -90,18 +90,18 @@ public class TaskController {
     }
 
     public double getDepthValue(int depth, Task curr){
-        double taskValue =0;
         switch(depth){
             case 0:
-                taskValue = curr.getTime();
+                return curr.getTime();
             case 1:
-                taskValue = curr.getMood();
+                return curr.getMood();
             case 2:
-                taskValue = curr.getEnergy();
+                return curr.getEnergy();
             case 3:
-                taskValue = Math.sqrt(Math.pow(curr.getLatitude(), 2) + Math.pow(curr.getLongitude(), 2));
+                return Math.sqrt(Math.pow(curr.getLatitude(), 2) + Math.pow(curr.getLongitude(), 2));   //This line needs work
+            default:
+                return 0;
         }
-        return taskValue;
     }
       
    
