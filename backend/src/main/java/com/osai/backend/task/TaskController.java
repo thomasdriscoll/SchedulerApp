@@ -71,13 +71,12 @@ public class TaskController {
     }
     //Helper functions for insertTask
     public int MedianOfMedians(ArrayList<Task> tasks, int k) {
-        int numBlocks = tasks.size() / 5;
-        int mom;
+        double numBlocks = tasks.size() / 5;
+        int mom, r;
         ArrayList<Task> medians;
-        start_index = 0;
-        end_index = 4;
+        int start_index = 0, end_index = 4;
 
-        for (int i = 1; i <= numBlocks; i++) {
+        for (double i = 0.0; i < numBlocks; i++) {
             ArrayList<Task> subList;
             if (start_index < tasks.size() && end_index < tasks.size()) {
                 subList = tasks.subList(start_index, end_index);
@@ -90,10 +89,20 @@ public class TaskController {
             medians.add(MedianOfFive(subList, k));
         }
 
-        // mom = MedianOfMedians(medians, numBlocks / 2) — not sure about this part of the pseudo yet
-        return 0;
+        mom = MedianOfMedians(medians, numBlocks / 2) // not sure about this part of the pseudo yet tho
+        r = partition(tasks, mom);
+        if (k < r) {
+            return MedianOfMedians(tasks.subList(0, r-1), k);
+        }
+        else if (k > r) {
+            return MedianOfMedians(tasks.subList(r + 1, tasks.size() - 1), k-r);
+        }
+        else {
+            return mom;
+        }
     }
 
+    //https://stackoverflow.com/questions/18441846/how-to-sort-an-arraylist-in-java
     public Task MedianOfFive(ArrayList<Task> subList, int depth) {
         Collections.sort(subList, new Comparator<Task>() {
             @Override
@@ -101,10 +110,28 @@ public class TaskController {
                 return getDepthValue(depth, task1).compareTo(getDepthValue(depth, task2));
             }
         });
-        return subList.get(2);
+        return subList.get(subList.size() / 2); //get the middle (median value)
     }
 
-    public Task partition()
+    public Task partition(ArrayList<Task> tasks, int mom) {
+        Task temp = tasks.get(mom);
+        tasks.set(mom, tasks.get(tasks.size()-1));
+        tasks.set(tasks.size()-1, temp);
+        int l = 0;
+
+        for (int i = 1; i <= tasks.size()-1; i++) {
+            if (tasks.get(i) < tasks.get(tasks.size() - 1)) {
+                l += 1;
+                temp = tasks.get(l);
+                tasks.set(l, tasks.get(i));
+                tasks.set(i, temp);
+            }
+        }
+        temp = tasks.get(tasks.size() - 1);
+        tasks.set(tasks.size() - 1, tasks.get(l + 1));
+        tasks.set(l + 1, temp);
+        return l += 1;
+    }
    
     public ArrayList<Task> getRightTree(ArrayList<Task> leftTree, double cut){
         return null;
