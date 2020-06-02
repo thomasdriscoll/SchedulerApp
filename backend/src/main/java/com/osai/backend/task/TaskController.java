@@ -5,15 +5,18 @@
 */
 package com.osai.backend.task;
 
-
 // import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
-import java.util.*;
-//import java.util.List;
+// import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Collections;
 
 import javax.validation.Valid;
 
@@ -56,15 +59,17 @@ public class TaskController {
         if(tasks.isEmpty()){
             return;
         }
-        int root = MedianOfMedians(tasks, depth);
+        // Find the median element of the current array, set its ancestry and add it to the kdtree, removing it from the other
+        int root = MedianOfMedians(tasks, depth);                       //O(n)
         ancestry = ancestry+tasks.get(root).getId()+".";
         tasks.get(root).setAncestry(ancestry);
         kdtree.add(tasks.get(root));
-        double cut = getDepthValue(depth, tasks.get(root));
+        double cut = getDepthValue(depth, tasks.get(root));             //O(1)
         tasks.remove(root);
-        ArrayList<Task> rightTree = getRightTree(tasks,cut);
+        // divide the tree into two
+        ArrayList<Task> rightTree = getRightTree(tasks,cut, depth);     // O(n)
         //Left half of tree
-        insertTask(tasks, kdtree, ancestry, (depth+1)%4);       //4 because there are 4 cutting dimensions (time, mood, energy, location)
+        insertTask(tasks, kdtree, ancestry, (depth+1)%4);               //4 because there are 4 cutting dimensions (time, mood, energy, location)
         //Right half of Tree
         insertTask(rightTree, kdtree, ancestry, (depth+1)%4);
     
@@ -79,23 +84,23 @@ public class TaskController {
         for (double i = 0.0; i < numBlocks; i++) {
             ArrayList<Task> subList;
             if (start_index < tasks.size() && end_index < tasks.size()) {
-                subList = tasks.subList(start_index, end_index);
+                subList = new ArrayList<Task> (tasks.subList(start_index, end_index));
                 start_index += 5;
                 end_index += 5;
             }
             else {
-                subList = tasks.subList(start_index, tasks.size() - 1); //for last block, may have less than five
+                subList = new ArrayList<Task> (tasks.subList(start_index, tasks.size() - 1)); //for last block, may have less than five
             }
             medians.add(MedianOfFive(subList, k));
         }
 
-        mom = MedianOfMedians(medians, numBlocks / 2) // not sure about this part of the pseudo yet tho
+        mom = MedianOfMedians(medians, (int) numBlocks / 2); // not sure about this part of the pseudo yet tho
         r = partition(tasks, mom);
         if (k < r) {
-            return MedianOfMedians(tasks.subList(0, r-1), k);
+            return MedianOfMedians(new ArrayList<Task> (tasks.subList(0, r-1)), k);
         }
         else if (k > r) {
-            return MedianOfMedians(tasks.subList(r + 1, tasks.size() - 1), k-r);
+            return MedianOfMedians(new ArrayList<Task> (tasks.subList(r + 1, tasks.size() - 1)), k-r);
         }
         else {
             return mom;
@@ -133,29 +138,34 @@ public class TaskController {
         return l += 1;
     }
    
-    public ArrayList<Task> getRightTree(ArrayList<Task> leftTree, double cut){
-        return null;
+    public ArrayList<Task> getRightTree(ArrayList<Task> leftTree, double cut, int depth){
+        Iterator<Task> iterator = leftTree.iterator();
+        ArrayList<Task> rightTree = new ArrayList<Task>();
+        while(iterator.hasNext()){
+            Task curr = iterator.next();
+            if(getDepthValue(depth, curr) >= cut){
+                rightTree.add(curr);
+                iterator.remove();
+            }
+        }
+        return rightTree;
     }
 
     public double getDepthValue(int depth, Task curr){
-        double taskValue =0;
         switch(depth){
             case 0:
-                taskValue = curr.getTime();
+                return curr.getTime();
             case 1:
-                taskValue = curr.getMood();
+                return curr.getMood();
             case 2:
-                taskValue = curr.getEnergy();
+                return curr.getEnergy();
             case 3:
-                taskValue = Math.sqrt(Math.pow(curr.getLatitude(), 2) + Math.pow(curr.getLongitude(), 2));
+                return Math.sqrt(Math.pow(curr.getLatitude(), 2) + Math.pow(curr.getLongitude(), 2));   //This line needs work
+            default:
+                return 0;
         }
-        return taskValue;
     }
-   
-   
-   
-   
-   
+      
    
     //Get all -- mostly for testing
     @GetMapping(path="/api/task/all")

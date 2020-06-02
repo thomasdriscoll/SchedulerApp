@@ -61,10 +61,12 @@ public class TaskControllerTests {
         task2.setId((long) 2);
         final List<Task> task_list = new ArrayList<Task>();
         task_list.add(task1); task_list.add(task2);
-        when(mockRepository.findAll()).thenReturn(task_list);  
+        when(mockRepository.findAll()).thenReturn(task_list);
+        // when(mockRepository.getTreeByUser("thomasdriscoll")).thenReturn((ArrayList<Task>) task_list);
         doReturn(Optional.of(task1)).when(mockRepository).findById((long) 1);
         when(mockRepository.existsById((long) 1)).thenReturn(true);
         when(mockRepository.existsById((long) 0)).thenReturn(false);
+        when(mockRepository.saveAll(task_list)).thenReturn(task_list);
     }
     
     //Sanity check; loads controller for testing. If this breaks, either your controller doesn't compile or your test suite is wrong
@@ -94,13 +96,13 @@ public class TaskControllerTests {
     // Tests good POST operation
     @Test
     public void createTaskTest() throws Exception {
-
+        //Mock task
         Task expect = new Task("thomasdriscoll", "Example Task 1", 5, 0, 3, true,
         80.0, 100.2, (float) 70, "afternoon");
+        
+        //Put task in database -- handled by the BeforeEach annotation
 
-        //Put task in database
-        when(mockRepository.save(expect)).thenReturn(expect);
-        //JSONify Task_list
+        //JSONify Task
         ObjectMapper mapper = new ObjectMapper();
         String expect_str = mapper.writeValueAsString(expect);
 
@@ -111,7 +113,7 @@ public class TaskControllerTests {
             .characterEncoding("utf-8"))
         .andExpect(status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Example Task 1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("$.[*].title").value("Example Task 1"));
     }
 
     // Tests bad POST operation
@@ -186,4 +188,5 @@ public class TaskControllerTests {
             .characterEncoding("utf-8"))
         .andExpect(status().isNotFound());
     }
+
 }
