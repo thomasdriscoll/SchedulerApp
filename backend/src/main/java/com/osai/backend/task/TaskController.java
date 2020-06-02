@@ -78,7 +78,7 @@ public class TaskController {
     public int MedianOfMedians(ArrayList<Task> tasks, int k) {
         double numBlocks = tasks.size() / 5;
         int mom, r;
-        ArrayList<Task> medians;
+        ArrayList<Task> medians = new ArrayList<Task>();
         int start_index = 0, end_index = 4;
 
         for (double i = 0.0; i < numBlocks; i++) {
@@ -95,7 +95,7 @@ public class TaskController {
         }
 
         mom = MedianOfMedians(medians, (int) numBlocks / 2); // not sure about this part of the pseudo yet tho
-        r = partition(tasks, mom);
+        r = partition(tasks, mom, k);
         if (k < r) {
             return MedianOfMedians(new ArrayList<Task> (tasks.subList(0, r-1)), k);
         }
@@ -112,20 +112,20 @@ public class TaskController {
         Collections.sort(subList, new Comparator<Task>() {
             @Override
             public int compare(Task task1, Task task2) {
-                return getDepthValue(depth, task1).compareTo(getDepthValue(depth, task2));
+                return Double.compare(getDepthValue(depth, task1), (getDepthValue(depth, task2)));
             }
         });
         return subList.get(subList.size() / 2); //get the middle (median value)
     }
 
-    public Task partition(ArrayList<Task> tasks, int mom) {
+    public int partition(ArrayList<Task> tasks, int mom, int k) {     //type you return
         Task temp = tasks.get(mom);
         tasks.set(mom, tasks.get(tasks.size()-1));
         tasks.set(tasks.size()-1, temp);
         int l = 0;
 
         for (int i = 1; i <= tasks.size()-1; i++) {
-            if (tasks.get(i) < tasks.get(tasks.size() - 1)) {
+            if (getDepthValue(k, tasks.get(i)) < getDepthValue(k, tasks.get(tasks.size() - 1))) {       //how you compare things
                 l += 1;
                 temp = tasks.get(l);
                 tasks.set(l, tasks.get(i));
@@ -135,7 +135,7 @@ public class TaskController {
         temp = tasks.get(tasks.size() - 1);
         tasks.set(tasks.size() - 1, tasks.get(l + 1));
         tasks.set(l + 1, temp);
-        return l += 1;
+        return l += 1;          //what you are returning
     }
    
     public ArrayList<Task> getRightTree(ArrayList<Task> leftTree, double cut, int depth){
