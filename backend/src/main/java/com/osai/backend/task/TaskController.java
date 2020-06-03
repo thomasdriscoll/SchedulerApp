@@ -60,12 +60,14 @@ public class TaskController {
             return;
         }
         // Find the median element of the current array, set its ancestry and add it to the kdtree, removing it from the other
-        int root = MedianOfMedians(tasks, depth);                       //O(n)
-        ancestry = ancestry+tasks.get(root).getId()+".";
-        tasks.get(root).setAncestry(ancestry);
-        kdtree.add(tasks.get(root));
-        double cut = getDepthValue(depth, tasks.get(root));             //O(1)
-        tasks.remove(root);
+        Task root = MedianOfMedians(tasks, tasks.size()/2, depth);                       //O(n)
+        int rootIndex = tasks.indexOf(root);
+        ancestry = ancestry+tasks.get(rootIndex).getId()+".";
+        System.out.println(ancestry);
+        tasks.get(rootIndex).setAncestry(ancestry);
+        kdtree.add(tasks.get(rootIndex));
+        double cut = getDepthValue(depth, tasks.get(rootIndex));             //O(1)
+        tasks.remove(rootIndex);
         // divide the tree into two
         ArrayList<Task> rightTree = getRightTree(tasks,cut, depth);     // O(n)
         //Left half of tree
@@ -75,9 +77,18 @@ public class TaskController {
     
     }
     //Helper functions for insertTask
-    public int MedianOfMedians(ArrayList<Task> tasks, int k) {
+    public Task MedianOfMedians(ArrayList<Task> tasks, int k, int depth) {
+        if(tasks.size() <= 25){
+            Collections.sort(tasks, new Comparator<Task>() {
+                @Override
+                public int compare(Task task1, Task task2) {
+                    return Double.compare(getDepthValue(depth, task1), (getDepthValue(depth, task2)));
+                }
+            });
+            return tasks.get((tasks.size() / 2));
+        }
         double numBlocks = tasks.size() / 5;
-        int mom, r;
+        Task mom;
         ArrayList<Task> medians = new ArrayList<Task>();
         int start_index = 0, end_index = 4;
 
@@ -92,19 +103,10 @@ public class TaskController {
                 subList = new ArrayList<Task> (tasks.subList(start_index, tasks.size() - 1)); //for last block, may have less than five
             }
             medians.add(MedianOfFive(subList, k));
+           
         }
-
-        mom = MedianOfMedians(medians, (int) numBlocks / 2); // not sure about this part of the pseudo yet tho
-        r = partition(tasks, mom, k);
-        if (k < r) {
-            return MedianOfMedians(new ArrayList<Task> (tasks.subList(0, r-1)), k);
-        }
-        else if (k > r) {
-            return MedianOfMedians(new ArrayList<Task> (tasks.subList(r + 1, tasks.size() - 1)), k-r);
-        }
-        else {
-            return mom;
-        }
+        mom = MedianOfMedians(medians, (int) medians.size() / 2, depth); // not sure about this part of the pseudo yet tho
+        return mom;
     }
 
     //https://stackoverflow.com/questions/18441846/how-to-sort-an-arraylist-in-java
@@ -116,26 +118,6 @@ public class TaskController {
             }
         });
         return subList.get(subList.size() / 2); //get the middle (median value)
-    }
-
-    public int partition(ArrayList<Task> tasks, int mom, int k) {     //type you return
-        Task temp = tasks.get(mom);
-        tasks.set(mom, tasks.get(tasks.size()-1));
-        tasks.set(tasks.size()-1, temp);
-        int l = 0;
-
-        for (int i = 1; i <= tasks.size()-1; i++) {
-            if (getDepthValue(k, tasks.get(i)) < getDepthValue(k, tasks.get(tasks.size() - 1))) {       //how you compare things
-                l += 1;
-                temp = tasks.get(l);
-                tasks.set(l, tasks.get(i));
-                tasks.set(i, temp);
-            }
-        }
-        temp = tasks.get(tasks.size() - 1);
-        tasks.set(tasks.size() - 1, tasks.get(l + 1));
-        tasks.set(l + 1, temp);
-        return l += 1;          //what you are returning
     }
    
     public ArrayList<Task> getRightTree(ArrayList<Task> leftTree, double cut, int depth){
