@@ -37,10 +37,10 @@ public class TaskRepositoryTest {
     @Test
     public void whenFindAll_thenReturnTasks() throws Exception {
         // given
-        Task one = new Task("thomasdriscoll", "Example Task 1", 5, 0, 5, 3, true,
-                "123 Sesame St., Disney Land, CA 12345", (float) 72.0, "afternoon");
-        Task two = new Task("thomasdriscoll", "Example Task 2", 5, 0, 5, 3, true,
-                "123 Sesame St., Disney Land, CA 12345", (float) 72.0, "afternoon");
+        Task one = new Task("thomasdriscoll", "Example Task 1", 5, 5, 3, true,
+                80.0, 100.2, (float) 72.0, "afternoon");
+        Task two = new Task("thomasdriscoll", "Example Task 2", 5, 5, 3, true,
+                80.0, 100.2, (float) 72.0, "afternoon");
         entityManager.persist(one);
         entityManager.persist(two);
         entityManager.flush();
@@ -63,8 +63,8 @@ public class TaskRepositoryTest {
     @Test
     public void whenFindByIdSucceeds_thenReturnOne() throws Exception {
         // given
-        Task expect = new Task("thomasdriscoll", "Example Task 1", 5, 0, 5, 3, true,
-                "123 Sesame St., Disney Land, CA 12345", (float) 72.0, "afternoon");
+        Task expect = new Task("thomasdriscoll", "Example Task 1", 0, 5, 3, true,
+                    80.0, 100.2, (float) 72.0, "afternoon");
         entityManager.persist(expect);
         entityManager.flush();
 
@@ -79,8 +79,8 @@ public class TaskRepositoryTest {
     @Test
     public void whenFindByIdFails_thenError() throws Exception {
         // given
-        Task expect = new Task("thomasdriscoll", "Example Task 1", 5, 0, 5, 3, true,
-                "123 Sesame St., Disney Land, CA 12345", (float) 72.0, "afternoon");
+        Task expect = new Task("thomasdriscoll", "Example Task 1", 0, 5, 3, true,
+                80.0, 100.2, (float) 72.0, "afternoon");
         entityManager.persist(expect);
         entityManager.flush();
 
@@ -95,8 +95,8 @@ public class TaskRepositoryTest {
     @Test
     public void whenCreateTask_thenReturnTask() throws Exception {
         // given
-        Task expect = new Task("thomasdriscoll", "Example Task 1", 5, 0, 5, 3, true,
-                "123 Sesame St., Disney Land, CA 12345", (float) 72.0, "afternoon");
+        Task expect = new Task("thomasdriscoll", "Example Task 1", 0, 5, 3, true,
+                80.0, 100.2, (float) 72.0, "afternoon");
         entityManager.flush();
 
         // when
@@ -112,8 +112,8 @@ public class TaskRepositoryTest {
     @Test
     public void whenDeleteById_thenReturnVoid() throws Exception {
         //given 
-        Task expect = new Task("thomasdriscoll", "Example Task 1", 5, 0, 5, 3, true,
-                "123 Sesame St., Disney Land, CA 12345", (float) 72.0, "afternoon");
+        Task expect = new Task("thomasdriscoll", "Example Task 1", 0, 5, 3, true,
+                80.0, 100.2, (float) 72.0, "afternoon");
         entityManager.flush();
         // save first
         Task found = repository.save(expect);
@@ -130,8 +130,8 @@ public class TaskRepositoryTest {
     @Test 
     public void whenDeleteByIdFails() throws Exception{
         //given 
-        Task expect = new Task("thomasdriscoll", "Example Task 1", 5, 0, 5, 3, true,
-                "123 Sesame St., Disney Land, CA 12345", (float) 72.0, "afternoon");
+        Task expect = new Task("thomasdriscoll", "Example Task 1", 5, 5, 3, true,
+                80.0, 100.2, (float) 72.0, "afternoon");
         entityManager.flush();
         // save first
         Task found = repository.save(expect);
@@ -154,8 +154,8 @@ public class TaskRepositoryTest {
     @Test
     public void whenUpdateTask_returnUpdatedTask() throws Exception {
         //given
-        Task initial = new Task("thomasdriscoll", "Example Task 1", 5, 0, 5, 3, true,
-                "123 Sesame St., Disney Land, CA 12345", (float) 72.0, "afternoon");
+        Task initial = new Task("thomasdriscoll", "Example Task 1", 5, 0, 5, true,
+                80.0, 100.2, (float) 72.0, "afternoon");
         entityManager.flush();
         // save initial
         Task found = repository.save(initial);
@@ -163,8 +163,8 @@ public class TaskRepositoryTest {
         assertEquals(initial, found, "/updateTaskById - save failed");
 
         //when updates
-        Task expect = new Task("thomasdriscoll", "Example Task 1", 5, 0, 5, 3, true,
-                "123 Sesame St., Disney Land, CA 12345", (float) 72.0, "afternoon");
+        Task expect = new Task("thomasdriscoll", "Example Task 1", 5, 0, 3, true,
+                80.0, 100.2, (float) 72.0, "afternoon");
         long id = initial.getId();
         found = repository.findById(id)
             .map(task -> {
@@ -180,8 +180,8 @@ public class TaskRepositoryTest {
     //Test for failed ID find, post instead
     @Test
     public void whenUpdateTaskFails_returnCreatedTask() throws Exception {
-        Task expect = new Task("thomasdriscoll", "Example Task 1", 5, 0, 5, 3, true,
-                "123 Sesame St., Disney Land, CA 12345", (float) 72.0, "afternoon");
+        Task expect = new Task("thomasdriscoll", "Example Task 1", 0, 5, 3, true,
+                80.0, 100.2, (float) 72.0, "afternoon");
         long id = -1;
         Task found = repository.findById(id)
             .map(task -> {

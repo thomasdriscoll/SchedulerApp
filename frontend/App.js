@@ -4,17 +4,38 @@ import { NativeRouter } from 'react-router-native';
 import Registration from './components/molecules/Registration';
 import routes from './routes';
 import Navbar from './components/molecules/Navbar';
-import GooglePlacesInput from './components/atoms/GooglePlacesInput';
+import Login from './components/molecules/Login';
 
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(false)
+  const [renderLogin, setRenderLogin] = useState(false)
+
+  //add code here to check if the user is logged in and set a boolean value for loggedIn
+
+  const login = async (email, password) => {
+    //axios post request
+    //setLoggedIn 
+  }
+
+  const register = async (name, email, password, geocode) => {
+    //axios post request
+    //setLoggedIn 
+  }
+
+  const logout = () => {
+    //axios post request
+    //setLoggedIn 
+  }
+
   if (!loggedIn) {
-    return (
-      <Registration/>
-      // <View style={{padding:'10%'}}>
-      //   <GooglePlacesInput/>
-      // </View>
-    )
+    if (renderLogin) {
+      return <Login setRenderLogin={setRenderLogin} login={login} />
+    }
+    else {
+      return (
+        <Registration setRenderLogin={setRenderLogin} register={register} />
+      )
+    }
   }
   return (
     <NativeRouter>

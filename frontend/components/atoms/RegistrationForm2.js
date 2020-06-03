@@ -1,17 +1,41 @@
 import React from 'react';
-import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
-export default function RegistrationForm2({ setForm, form }) {
+
+export default function RegistrationForm2({ setForm, form, setEmail, email }) {
     // Keyboard.show()
+
+    const validate = (email) => {
+        const expression = /(?!.*\.{2})^([a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+(\.[a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+)*|"((([\t]*\r\n)?[\t]+)?([\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*(([\t]*\r\n)?[\t]+)?")@(([a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.)+([a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.?$/i;
+    
+        const validation = expression.test(String(email).toLowerCase())
+
+        if(validation){
+            return <LinearGradient style={styles.nextIcon} colors={['#A12CF5', '#8E29FA', '#8327FC']}><View ><Text onPress={() => setForm(form + 1)}><MaterialIcons size={40} color="white" name="navigate-next" /></Text></View></LinearGradient>
+        }
+        else{
+            return <View style={styles.nextIcon}><Text><MaterialIcons size={40} color="white" name="navigate-next" /></Text></View>
+        }
+    }
+
     return (
-        <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <KeyboardAvoidingView style={styles.container} behavior={Platform.select({android: undefined, ios: 'padding'})} enabled>
             <View style={styles.prevIcon}><Text onPress={() => setForm(form - 1)}><MaterialIcons size={35} color="white" name="navigate-next" /></Text></View>
             <View style={styles.subCon}>
                 <Text style={styles.text}>What's your email?</Text>
-                <TextInput style={styles.input} autoFocus={true} keyboardType='email-address' placeholder="Your email" selectionColor="white" placeholderTextColor="rgba(255,255,255,0.5)" />
+                <TextInput style={styles.input} 
+                autoFocus={true} 
+                keyboardType='email-address' 
+                placeholder="Your email" 
+                selectionColor="white" 
+                placeholderTextColor="rgba(255,255,255,0.5)"
+                onChangeText={setEmail}
+                value={email} 
+                autoCapitalize="none"/>
             </View>
-            <View style={styles.nextIcon}><Text onPress={() => setForm(form + 1)}><MaterialIcons size={40} color="white" name="navigate-next" /></Text></View>
+            {validate(email)}
         </KeyboardAvoidingView>
     )
 }

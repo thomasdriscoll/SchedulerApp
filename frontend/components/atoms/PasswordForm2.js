@@ -4,7 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 
 
-export default function RegistrationForm3({ setForm, form, password, setPassword }) {
+export default function PasswordForm2({ email, setForm, form, password, setPassword,login }) {
     // Keyboard.show()
     const passwordValidator = () => {
         if(password.length>0){
@@ -17,9 +17,9 @@ export default function RegistrationForm3({ setForm, form, password, setPassword
 
     return (
         <KeyboardAvoidingView style={styles.container} behavior={Platform.select({android: undefined, ios: 'padding'})} enabled>
-            <View style={styles.prevIcon}><Text onPress={() => setForm(form - 1)}><MaterialIcons size={35} color="white" name="navigate-next" /></Text></View>
+            <View style={styles.prevIcon}><Text onPress={() => login(email,password)}><MaterialIcons size={35} color="white" name="navigate-next" /></Text></View>
             <View style={styles.subCon}>
-                <Text style={styles.text}>Choose your password</Text>
+                <Text style={styles.text}>Enter your password</Text>
                 <TextInput 
                 style={styles.input} 
                 autoFocus={true} 
