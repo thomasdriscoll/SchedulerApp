@@ -1,3 +1,9 @@
+/*
+    Author: Thomas Driscoll
+    Date: 18 April 2020
+    Remaining work: 
+*/
+
 package com.osai.backend.task;
 
 import lombok.Data;
@@ -5,85 +11,101 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
+// https://stackoverflow.com/questions/3405229/specifying-an-index-non-unique-key-using-jpa
+// Very helpful
 @Data 
 @Entity
 public class Task {
 
     private @Id @GeneratedValue Long id;
+
+    @NotBlank(message = "Username is mandatory")
     private String username;
+
+    @NotBlank(message = "Task title is mandatory")
     private String title;
-    private int minute;
-    private int hour;
+
+    @NotNull(message = "# of minutes is mandatory")
+    private int time;
+
+    @NotNull(message = "Mood is mandatory")
     private int mood;
+
+    @NotNull(message = "Energy is mandatory")
     private int energy;
+
+    @NotNull(message = "Inside is mandatory")
     private boolean inside;
-    private String location;
-    private int novelty;    
-    private String time_of_day;
+
+    @NotNull(message = "Latitude is necessary")
+    private double latitude;
+
+    @NotNull(message = "Latitude is necessary")
+    private double longitude;
+
+    @NotNull(message = "Temperature is mandatory")
     private float temperature; 
-    private long right_child;
-    private long left_child;
+
+    @NotBlank(message = "Time of day is mandatory")
+    private String time_of_day;
+
+    //Remaining values are initialized by the Task constructor
+    private int novelty;    
+    private String ancestry;
 
     public Task() {}
 
     public Task(   
         String username, 
         String title, 
-        int minute, 
-        int hour, 
+        int time, 
         int mood,
         int energy, 
         boolean inside,
-        String location, 
-        int novelty, 
-        String time_of_day,
-        float temperature, 
-        long right_child,
-        long left_child
+        double latitude,
+        double longitude,
+        float temperature,
+        String time_of_day 
     ){
         this.username = username;
         this.title = title;
-        this.minute = minute;
-        this.hour = hour;
+        this.time = time;
         this.mood = mood;
         this.energy = energy;
         this.inside = inside;
-        this.location = location;
-        this.novelty = novelty;
-        this.time_of_day = time_of_day;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.temperature = temperature;
-        this.right_child = right_child;
-        this.left_child = left_child;
+        this.time_of_day = time_of_day;
+        this.novelty = 10;
+        this.ancestry = null;
     }
 
     //Getters 
     public Long getId() { return this.id; }
     public String getUser() { return this.username; }
     public String getTitle(){ return this.title; }
-    public int[] getTime() { 
-        int[] time = {this.hour, this.minute}; 
-        return time;
-    }
+    public int getTime() { return this.time;  }
     public int getMood() { return this.mood; }
     public int getEnergy() { return this.energy; }
     public boolean getInside() { return this.inside; }
-    public String getLocation() { return this.location; }
+    public double getLatitude() { return this.latitude; }
+    public double getLongitude() { return this.longitude; }
     public int getNovelty() { return this.novelty; }
     public String getTimeOfDay() { return this.time_of_day; }
     public float getTemperature() { return this.temperature; }
-    public long[] getChildNodes() { 
-        long[] children = {this.left_child, this.right_child};
-        return children;
-    }
+    public String getAncestry() { return this.ancestry; }
+
 
     //Setters
     public void setTitle(String title){ 
         this.title = title; 
     }
-    public void setTime(int hour, int minute) { 
-        this.hour = hour;
-        this.minute = minute;
+    public void setTime(int time) { 
+        this.time = time;
     }
     public void setMood(int mood) { 
         this.mood = mood; 
@@ -94,8 +116,9 @@ public class Task {
     public void setInside(boolean inside) { 
         this.inside = inside;
     }
-    public void setLocation(String location) { 
-        this.location = location; 
+    public void setLocation(double latitude, double longitude) { 
+        this.latitude = latitude; 
+        this.longitude = longitude;
     }
     public void setNovelty(int novelty) { 
         this.novelty = novelty; 
@@ -106,14 +129,11 @@ public class Task {
     public void setTemperature(float temp) { 
         this.temperature = temp; 
     }
-    public void setLeftChild(Long left) { 
-        this.left_child = left;
+    public void setAncestry(String ancestry) {
+        this.ancestry = ancestry;
     }
-    public void setRightChild(Long right) {
-        this.right_child = right;
-    }
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(long i) {
+        this.id = i;
     }
 
 }
