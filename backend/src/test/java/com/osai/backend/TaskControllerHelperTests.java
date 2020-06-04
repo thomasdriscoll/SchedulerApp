@@ -56,21 +56,27 @@ public class TaskControllerHelperTests {
         Assertions.assertEquals(-1, result);
     }
 
-    @Test 
-    public void insertTask_fullTree() throws Exception{
+    // @Test 
+    // public void insertTask_fullTree() throws Exception{
+    //     ArrayList<Task> tasks = arrayOfTasks();
+    //     ArrayList<Task> kdtree = new ArrayList<Task>();
+    //     this.controller.insertTask(tasks, kdtree, "", 0);
+    //     Assertions.assertEquals((long) 52, kdtree.get(0).getId());
+    //     Assertions.assertEquals("52.", kdtree.get(0).getAncestry());
+    // }
+    @Test
+    public void insertTask_PartitionWorks() throws Exception {
         ArrayList<Task> tasks = arrayOfTasks();
-        ArrayList<Task> kdtree = new ArrayList<Task>();
-        this.controller.insertTask(tasks, kdtree, "", 0);
-        Assertions.assertEquals((long) 52, kdtree.get(0).getId());
-        Assertions.assertEquals("52.", kdtree.get(0).getAncestry());
+        int median = this.controller.partition(tasks, tasks.size()/2, 0);
+        Assertions.assertEquals(48, median);
     }
 
-    @Test
-    public void insertTask_MomWorks() throws Exception {
-        ArrayList<Task> tasks = arrayOfTasks();
-        Task median = this.controller.MedianOfMedians(tasks, tasks.size()/2, 0);
-        Assertions.assertEquals((long) 52, median.getId());
-    } 
+    // @Test
+    // public void insertTask_MomWorks() throws Exception {
+    //     ArrayList<Task> tasks = arrayOfTasks();
+    //     Task median = this.controller.MedianOfMedians(tasks, tasks.size()/2, 0);
+    //     Assertions.assertEquals((long) 52, median.getId());
+    // } 
 
     @Test 
     public void insertTask_MedianOfFiveWorks() throws Exception {
@@ -80,20 +86,20 @@ public class TaskControllerHelperTests {
         Assertions.assertEquals(tasks.get(8), median);
     }
 
-    @Test
-    public void traverseTreeWorks() throws Exception {
-        ArrayList<Task> tasks = arrayOfTasks();
-        ArrayList<Task> kdtree = new ArrayList<Task>();
-        this.controller.insertTask(tasks, kdtree, "", 0);
-        ArrayList<Task> results =  new ArrayList<Task>();
-        double[] curr = {250, 4, 4, 250, 250};
-        this.controller.findBestTen(kdtree, results, curr, 0);
-        for(int i = 0; i < results.size(); i++){
-            System.out.println(results.get(i));
-        }
-        Assertions.assertEquals(10, results.size());
-        Assertions.assertEquals(true, false);
-    }
+    // @Test
+    // public void traverseTreeWorks() throws Exception {
+    //     ArrayList<Task> tasks = arrayOfTasks();
+    //     ArrayList<Task> kdtree = new ArrayList<Task>();
+    //     this.controller.insertTask(tasks, kdtree, "", 0);
+    //     ArrayList<Task> results =  new ArrayList<Task>();
+    //     double[] curr = {250, 4, 4, 250, 250};
+    //     this.controller.findBestTen(kdtree, results, curr, 0);
+    //     for(int i = 0; i < results.size(); i++){
+    //         System.out.println(results.get(i));
+    //     }
+    //     Assertions.assertEquals(10, results.size());
+    //     Assertions.assertEquals(true, false);
+    // }
 
 
 
