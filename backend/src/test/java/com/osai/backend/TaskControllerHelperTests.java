@@ -33,7 +33,7 @@ public class TaskControllerHelperTests {
                 "Example Task "+ String.valueOf(i),
                 5 * i,          //time
                 i % 5,          //mood
-                i % 5 -2,       //energy
+                (i-2) % 5 ,       //energy
                 false,
                 i * 4.5,        //latitude
                 i * 9.0,        //longitude
@@ -51,8 +51,9 @@ public class TaskControllerHelperTests {
     public void insertTask_emptyTest() throws Exception{
         ArrayList<Task> tasks = new ArrayList<Task>();
         ArrayList<Task> kdtree = new ArrayList<Task>();
-        this.controller.insertTask (tasks, kdtree, "", 0);
+        int result = this.controller.insertTask (tasks, kdtree, "", 0);
         Assertions.assertEquals(true, tasks.isEmpty());
+        Assertions.assertEquals(-1, result);
     }
 
     @Test 
@@ -77,6 +78,21 @@ public class TaskControllerHelperTests {
         ArrayList<Task> subList = new ArrayList<Task> (tasks.subList(7, 11));
         Task median = this.controller.MedianOfFive(subList, 1); //using mood so that the medians aren't sorted already
         Assertions.assertEquals(tasks.get(8), median);
+    }
+
+    @Test
+    public void traverseTreeWorks() throws Exception {
+        ArrayList<Task> tasks = arrayOfTasks();
+        ArrayList<Task> kdtree = new ArrayList<Task>();
+        this.controller.insertTask(tasks, kdtree, "", 0);
+        ArrayList<Task> results =  new ArrayList<Task>();
+        double[] curr = {250, 4, 4, 250, 250};
+        this.controller.findBestTen(kdtree, results, curr, 0);
+        for(int i = 0; i < results.size(); i++){
+            System.out.println(results.get(i));
+        }
+        Assertions.assertEquals(10, results.size());
+        Assertions.assertEquals(true, false);
     }
 
 

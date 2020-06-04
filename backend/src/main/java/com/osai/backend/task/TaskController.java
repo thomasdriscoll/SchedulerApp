@@ -44,20 +44,12 @@ public class TaskController {
         insertTask(tasks, kdtree, "", 0);
 
         return repository.saveAll(kdtree);
-        /*
-            Note: Probably would be a good idea to get rid of the switch statement in the insertTask function to create
-            an array of values in this function. That way, we could just preset the values to correspond to the task and just have O(1) lookup.
-            The trick is figuring out how to use the modulus function s.t. the indices always match up. Or that may be a limiting factor for the trees.
-            FOR INSTANCE: location/mood/time/energy are always going to be 1-4, I don't see a use case where they wouldn't be important. But novelty isn't always
-            important (I will be using it as a tie-breaker value probably), time_of_day may be more important and they'd both be fighting for that 5th position.
-            Good problem to solve later...
-        */
     }
    
-    public void insertTask(ArrayList<Task> tasks, ArrayList<Task> kdtree, String ancestry, int depth){
+    public int insertTask(ArrayList<Task> tasks, ArrayList<Task> kdtree, String ancestry, int depth){
         //Making an init tree
         if(tasks.isEmpty()){
-            return;
+            return -1;
         }
         // Find the median element of the current array, set its ancestry and add it to the kdtree, removing it from the other
         Task root = MedianOfMedians(tasks, tasks.size()/2, depth);                       //O(n)
@@ -65,15 +57,19 @@ public class TaskController {
         ancestry = ancestry+tasks.get(rootIndex).getId()+".";
         System.out.println(ancestry);
         tasks.get(rootIndex).setAncestry(ancestry);
-        kdtree.add(tasks.get(rootIndex));
+        kdtree.add(tasks.get(rootIndex));       
         double cut = getDepthValue(depth, tasks.get(rootIndex));             //O(1)
         tasks.remove(rootIndex);
+        rootIndex = kdtree.size()-1;
         // divide the tree into two
         ArrayList<Task> rightTree = getRightTree(tasks,cut, depth);     // O(n)
         //Left half of tree
-        insertTask(tasks, kdtree, ancestry, (depth+1)%4);               //4 because there are 4 cutting dimensions (time, mood, energy, location)
+        long left = insertTask(tasks, kdtree, ancestry, (depth+1)%4);               //4 because there are 4 cutting dimensions (time, mood, energy, location)
+        kdtree.get(rootIndex).setLeftChild(left);
         //Right half of Tree
-        insertTask(rightTree, kdtree, ancestry, (depth+1)%4);
+        long right = insertTask(rightTree, kdtree, ancestry, (depth+1)%4);
+        kdtree.get(rootIndex).setRightChild(right);
+        return rootIndex;   //Ok, due to the way the tree is structured (left to right), we know that the index here will be preserved on the retrieval
     
     }
     //Helper functions for insertTask
@@ -88,7 +84,7 @@ public class TaskController {
             return tasks.get((tasks.size() / 2));
         }
         double numBlocks = tasks.size() / 5;
-        Task mom;
+        Task mom, r;
         ArrayList<Task> medians = new ArrayList<Task>();
         int start_index = 0, end_index = 4;
 
@@ -106,7 +102,16 @@ public class TaskController {
            
         }
         mom = MedianOfMedians(medians, (int) medians.size() / 2, depth); // not sure about this part of the pseudo yet tho
-        return mom;
+        r = partition(tasks, tasks.indexOf(mom));
+        if (k < r) {
+            return MedianOfMedians(new ArrayList<Task> (tasks.subList(0, r-1)), k);
+        }
+        else if (k > r) {
+            return MedianOfMedians(new ArrayList<Task> (tasks.subList(r + 1, tasks.size() - 1)), k-r);
+        }
+        else {
+            return mom;
+        }
     }
 
     //https://stackoverflow.com/questions/18441846/how-to-sort-an-arraylist-in-java
@@ -118,6 +123,26 @@ public class TaskController {
             }
         });
         return subList.get(subList.size() / 2); //get the middle (median value)
+    }
+
+    public Task partition(ArrayList<Task> tasks, int mom) {
+        Task temp = tasks.get(mom);
+        tasks.set(mom, tasks.get(tasks.size()-1));
+        tasks.set(tasks.size()-1, temp);
+        int l = 0;
+
+        for (int i = 1; i <= tasks.size()-1; i++) {
+            if (tasks.get(i) < tasks.get(tasks.size() - 1)) {
+                l += 1;
+                temp = tasks.get(l);
+                tasks.set(l, tasks.get(i));
+                tasks.set(i, temp);
+            }
+        }
+        temp = tasks.get(tasks.size() - 1);
+        tasks.set(tasks.size() - 1, tasks.get(l + 1));
+        tasks.set(l + 1, temp);
+        return l += 1;
     }
    
     public ArrayList<Task> getRightTree(ArrayList<Task> leftTree, double cut, int depth){
@@ -148,7 +173,65 @@ public class TaskController {
         }
     }
       
-   
+    // Get best fit
+    // Return top 10 results
+    @GetMapping("/api/task/bestTen/{username}/{time}/{energy}/{mood}/{latitude}/{longitude}")
+    public @ResponseBody Iterable<Task> getBestTenTasks(
+        String username,
+        double time,
+        double energy,
+        double mood,
+        double latitude,
+        double longitude
+    ){
+        double [] compare = {time, energy, mood, latitude, longitude};
+        ArrayList<Task> tree = repository.getTreeByUser(username);
+        ArrayList<Task> bestTen = new ArrayList<Task>();
+        findBestTen(tree, bestTen, compare, 0);
+        return bestTen;
+    }
+
+    public void findBestTen(ArrayList<Task> tree, ArrayList<Task> results, double [] compare, int depth){
+        int best = 0;
+        for(int i = 0; i < 10; i++){
+            best = traverseTree(tree, compare, depth, 0);
+            results.add(tree.get(best));
+            tree.get(best).setAncestry("none");
+        }
+        for(int i =0; i <10; i++){
+            System.out.println(results.get(i));
+        }
+    }
+    public int traverseTree(ArrayList<Task> tree, double [] compare, int depth, int i){
+        if(tree.get(i).getLeftChild() == -1 && tree.get(i).getRightChild() == -1){
+            return i;
+        }
+
+        int left = (int) tree.get(i).getLeftChild();
+        int right = (int) tree.get(i).getRightChild();
+        int best = -1;
+
+        if(getDepthValue(depth, tree.get(i)) > compare[depth] && left != -1){
+            best = traverseTree(tree, compare, (depth+1)%4, left);
+        }
+        else{
+            best = traverseTree(tree, compare, (depth+1)%4, right);
+        }
+        double curr_node = calculateWeight(tree.get(i), compare);
+        double pot_best = calculateWeight(tree.get(best), compare);
+        
+        if(curr_node < pot_best && tree.get(i).getAncestry() != "none"){
+            best = i;
+        }
+        return best;   
+        
+    }
+
+    public double calculateWeight(Task node, double [] curr){
+        return Math.abs((curr[0] - node.getTime())) + Math.abs((curr[1] - node.getEnergy())) + Math.abs((curr[2] - node.getMood())) + 
+        Math.abs(Math.sqrt(Math.pow((curr[3] - node.getLatitude()), 2) + Math.pow((curr[4] - node.getLongitude()), 2)));
+    }
+
     //Get all -- mostly for testing
     @GetMapping(path="/api/task/all")
     public @ResponseBody Iterable<Task> getAllTasks(){
@@ -165,14 +248,7 @@ public class TaskController {
              return found;
          }
     }
-    // Get best fit
-    // Return top 10 results
-    @GetMapping("/api/task/bestTen/{username}")
-    public @ResponseBody Iterable<Task> getBestTenTasks(String username){
-        ArrayList<Task> tree = repository.getTreeByUser(username);
-        System.out.println(tree.get(0));
-        return tree;
-    }
+    
 
     @DeleteMapping("/api/task/deleteTaskById/{id}") 
     public void deleteTaskById(@PathVariable long id) {
@@ -197,7 +273,5 @@ public class TaskController {
             });
     }
 
-    public void traverseTree(ArrayList<Task> tree, Task curr){
-
-    }
+    
 }
