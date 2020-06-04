@@ -55,6 +55,8 @@ public class Task {
     //Remaining values are initialized by the Task constructor
     private int novelty;    
     private String ancestry;
+    private long left_child;
+    private long right_child;
 
     public Task() {}
 
@@ -82,6 +84,8 @@ public class Task {
         this.time_of_day = time_of_day;
         this.novelty = 10;
         this.ancestry = null;
+        this.left_child = -1;
+        this.right_child = -1;
     }
 
     //Getters 
@@ -98,6 +102,8 @@ public class Task {
     public String getTimeOfDay() { return this.time_of_day; }
     public float getTemperature() { return this.temperature; }
     public String getAncestry() { return this.ancestry; }
+    public long getLeftChild() { return this.left_child; }
+    public long getRightChild() { return this.right_child; }
 
 
     //Setters
@@ -134,6 +140,12 @@ public class Task {
     }
     public void setId(long i) {
         this.id = i;
+    }
+    public void setLeftChild(long i){
+        this.left_child = i;
+    }
+    public void setRightChild(long i){
+        this.right_child = i;
     }
 
 }

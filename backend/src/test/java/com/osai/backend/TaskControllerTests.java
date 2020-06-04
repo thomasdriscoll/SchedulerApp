@@ -94,27 +94,27 @@ public class TaskControllerTests {
     // References: https://stackoverflow.com/questions/51346781/how-to-test-post-method-in-spring-boot-using-mockito-and-junit
     // References: https://stackoverflow.com/questions/49956208/spring-controller-testing-with-mockmvc-post-method
     // Tests good POST operation
-    @Test
-    public void createTaskTest() throws Exception {
-        //Mock task
-        Task expect = new Task("thomasdriscoll", "Example Task 1", 5, 0, 3, true,
-        80.0, 100.2, (float) 70, "afternoon");
+    // @Test
+    // public void createTaskTest() throws Exception {
+    //     //Mock task
+    //     Task expect = new Task("thomasdriscoll", "Example Task 1", 5, 0, 3, true,
+    //     80.0, 100.2, (float) 70, "afternoon");
         
-        //Put task in database -- handled by the BeforeEach annotation
+    //     //Put task in database -- handled by the BeforeEach annotation
 
-        //JSONify Task
-        ObjectMapper mapper = new ObjectMapper();
-        String expect_str = mapper.writeValueAsString(expect);
+    //     //JSONify Task
+    //     ObjectMapper mapper = new ObjectMapper();
+    //     String expect_str = mapper.writeValueAsString(expect);
 
-        controller.perform(MockMvcRequestBuilders
-            .post("/api/task/createTask")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(expect_str)
-            .characterEncoding("utf-8"))
-        .andExpect(status().isOk())
-        .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.[*].title").value("Example Task 1"));
-    }
+    //     controller.perform(MockMvcRequestBuilders
+    //         .post("/api/task/createTask")
+    //         .contentType(MediaType.APPLICATION_JSON)
+    //         .content(expect_str)
+    //         .characterEncoding("utf-8"))
+    //     .andExpect(status().isOk())
+    //     .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+    //     .andExpect(MockMvcResultMatchers.jsonPath("$.[*].title").value("Example Task 1"));
+    // }
 
     // Tests bad POST operation
     @Test 
