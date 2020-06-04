@@ -56,27 +56,29 @@ public class TaskControllerHelperTests {
         Assertions.assertEquals(-1, result);
     }
 
-    // @Test 
-    // public void insertTask_fullTree() throws Exception{
-    //     ArrayList<Task> tasks = arrayOfTasks();
-    //     ArrayList<Task> kdtree = new ArrayList<Task>();
-    //     this.controller.insertTask(tasks, kdtree, "", 0);
-    //     Assertions.assertEquals((long) 52, kdtree.get(0).getId());
-    //     Assertions.assertEquals("52.", kdtree.get(0).getAncestry());
-    // }
+    @Test 
+    public void insertTask_fullTree() throws Exception{
+        ArrayList<Task> tasks = arrayOfTasks();
+        ArrayList<Task> kdtree = new ArrayList<Task>();
+        this.controller.insertTask(tasks, kdtree, "", 0);
+        Assertions.assertEquals((long) 49, kdtree.get(0).getId());
+        Assertions.assertEquals("49.", kdtree.get(0).getAncestry());
+    }
+    
     @Test
     public void insertTask_PartitionWorks() throws Exception {
         ArrayList<Task> tasks = arrayOfTasks();
-        int median = this.controller.partition(tasks, tasks.size()/2, 0);
-        Assertions.assertEquals(48, median);
+        int median = this.controller.partition(tasks, 52, 0);
+        Assertions.assertEquals(52, median);
     }
 
-    // @Test
-    // public void insertTask_MomWorks() throws Exception {
-    //     ArrayList<Task> tasks = arrayOfTasks();
-    //     Task median = this.controller.MedianOfMedians(tasks, tasks.size()/2, 0);
-    //     Assertions.assertEquals((long) 52, median.getId());
-    // } 
+    @Test
+    public void insertTask_MomWorks() throws Exception {
+        ArrayList<Task> tasks = arrayOfTasks();
+        Task median = this.controller.MedianOfMedians(tasks, tasks.size()/2, 0);
+        System.out.println(median);
+        Assertions.assertEquals((long) 49, median.getId());
+    } 
 
     @Test 
     public void insertTask_MedianOfFiveWorks() throws Exception {
