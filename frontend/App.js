@@ -1,29 +1,48 @@
-import * as React from 'react';
-import 'react-native-gesture-handler';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import { GetTask} from './components/molecules/getTask';
-import { CreateTask } from './components/molecules/createTask';
-
-const Stack = createStackNavigator();
-
-global.position = 0;
+import React, { useState } from 'react';
+import { View, Text } from 'react-native';
+import { NativeRouter } from 'react-router-native';
+import Registration from './components/molecules/Registration';
+import routes from './routes';
+import Navbar from './components/molecules/Navbar';
+import Login from './components/molecules/Login';
 
 export default function App() {
+  const [loggedIn, setLoggedIn] = useState(false)
+  const [renderLogin, setRenderLogin] = useState(false)
+
+  //add code here to check if the user is logged in and set a boolean value for loggedIn
+
+  const login = async (email, password) => {
+    //axios post request
+    //setLoggedIn 
+  }
+
+  const register = async (name, email, password, geocode) => {
+    //axios post request
+    //setLoggedIn 
+  }
+
+  const logout = () => {
+    //axios post request
+    //setLoggedIn 
+  }
+
+  if (!loggedIn) {
+    if (renderLogin) {
+      return <Login setRenderLogin={setRenderLogin} login={login} />
+    }
+    else {
+      return (
+        <Registration setRenderLogin={setRenderLogin} register={register} />
+      )
+    }
+  }
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="GetTask">
-        <Stack.Screen 
-          name = "GetTask"
-          component = {GetTask}
-          options = {{}}
-        />
-        <Stack.Screen
-          name = "CreateTask"
-          component = {CreateTask}
-          options = {{}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+    <NativeRouter>
+      <View>
+        {routes}
+        <Navbar />
+      </View>
+    </NativeRouter>
+  )
 }
