@@ -75,12 +75,6 @@ public class TaskController {
     //Helper functions for insertTask
     public Task MedianOfMedians(ArrayList<Task> tasks, int k, int depth) {
         if(tasks.size() <= 25){
-            // Collections.sort(tasks, new Comparator<Task>() {
-            //     @Override
-            //     public int compare(Task task1, Task task2) {
-            //         return Double.compare(getDepthValue(depth, task1), (getDepthValue(depth, task2)));
-            //     }
-            // });
             return tasks.get(k);
         }
         double numBlocks = tasks.size() / 5;
@@ -101,7 +95,7 @@ public class TaskController {
             medians.add(MedianOfFive(subList, k));
            
         }
-        mom = MedianOfMedians(medians, (int) medians.size() / 2, depth); // not sure about this part of the pseudo yet tho
+        mom = MedianOfMedians(medians, (int) medians.size() / 2, depth);
         r = partition(tasks, tasks.indexOf(mom), depth);
         if (k < r) {
             return MedianOfMedians(new ArrayList<Task> (tasks.subList(0, r)), k-1, depth);
