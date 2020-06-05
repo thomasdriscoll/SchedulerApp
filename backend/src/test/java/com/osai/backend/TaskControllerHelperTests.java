@@ -98,6 +98,7 @@ public class TaskControllerHelperTests {
         this.controller.findBestTen(kdtree, results, curr, 0);
         for(int i = 0; i < results.size(); i++){
             System.out.println(results.get(i));
+            System.out.println();
         }
         Assertions.assertEquals(10, results.size());
         Assertions.assertEquals(true, false);
