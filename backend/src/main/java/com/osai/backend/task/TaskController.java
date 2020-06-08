@@ -64,10 +64,10 @@ public class TaskController {
         // divide the tree into two
         ArrayList<Task> rightTree = getRightTree(tasks,cut, depth);     // O(n)
         //Left half of tree
-        long left = insertTask(tasks, kdtree, ancestry, (depth+1)%4);               //4 because there are 4 cutting dimensions (time, mood, energy, location)
+        int left = insertTask(tasks, kdtree, ancestry, (depth+1)%4);               //4 because there are 4 cutting dimensions (time, mood, energy, location)
         kdtree.get(rootIndex).setLeftChild(left);
         //Right half of Tree
-        long right = insertTask(rightTree, kdtree, ancestry, (depth+1)%4);
+        int right = insertTask(rightTree, kdtree, ancestry, (depth+1)%4);
         kdtree.get(rootIndex).setRightChild(right);
         return rootIndex;   //Ok, due to the way the tree is structured (left to right), we know that the index here will be preserved on the retrieval
     
@@ -174,51 +174,59 @@ public class TaskController {
         double latitude,
         double longitude
     ){
-        double [] compare = {time, energy, mood, latitude, longitude};
+        double [] compare = {time, mood, energy, latitude, longitude}; //switched mood and energy order in array
         ArrayList<Task> tree = repository.getTreeByUser(username);
-        ArrayList<Task> bestTen = new ArrayList<Task>();
-        findBestTen(tree, bestTen, compare, 0);
-        return bestTen;
+        return findBestTen(tree, compare, 0);
     }
 
-    public void findBestTen(ArrayList<Task> tree, ArrayList<Task> results, double [] compare, int depth){
+    public ArrayList<Task> findBestTen(ArrayList<Task> tree, double [] compare, int depth){
         int best = 0;
+
+        ArrayList<Task> results = new ArrayList<Task>();
         for(int i = 0; i < 10; i++){
             best = traverseTree(tree, compare, depth, 0);
             results.add(tree.get(best));
             tree.get(best).setAncestry("none");
-        }
-        for(int i =0; i <10; i++){
+        } 
+         /* for(int i =0; i <10; i++){
             System.out.println(results.get(i));
-        }
+        } */
+        return results;
     }
-    public int traverseTree(ArrayList<Task> tree, double [] compare, int depth, int i){
-        if(tree.get(i).getLeftChild() == -1 && tree.get(i).getRightChild() == -1){
+
+    public int traverseTree(ArrayList<Task> tree, double [] compare, int depth, int i) {
+        if(tree.get(i).getLeftChild() == -1 && tree.get(i).getRightChild() == -1) { //if node is a leaf (can't traverse anymore, end recursion)
             return i;
         }
 
-        int left = (int) tree.get(i).getLeftChild();
-        int right = (int) tree.get(i).getRightChild();
+        int left = tree.get(i).getLeftChild(); 
+        int right = tree.get(i).getRightChild();
         int best = -1;
 
-        if(getDepthValue(depth, tree.get(i)) > compare[depth] && left != -1){
-            best = traverseTree(tree, compare, (depth+1)%4, left);
+        if((getDepthValue(depth, tree.get(i)) > compare[depth]) && left != -1 && tree.get(i).getAncestry() != "none") {
+            best = traverseTree(tree, compare, (depth+1)%4, left); //will return some leaf node and assign it to var best 
         }
-        else{
+        else {
             best = traverseTree(tree, compare, (depth+1)%4, right);
         }
+
         double curr_node = calculateWeight(tree.get(i), compare);
-        double pot_best = calculateWeight(tree.get(best), compare);
+        double pot_best = calculateWeight(tree.get(best), compare); //will return some arraylist value
+
+        if (tree.get(best).getAncestry() == "none") {
+            return i;
+        }
         
         if(curr_node < pot_best && tree.get(i).getAncestry() != "none"){
-            best = i;
+            best = i; //new best index
         }
+
         return best;   
-        
     }
 
-    public double calculateWeight(Task node, double [] curr){
-        return Math.abs((curr[0] - node.getTime())) + Math.abs((curr[1] - node.getEnergy())) + Math.abs((curr[2] - node.getMood())) + 
+    //checks for "closeness"
+    public double calculateWeight(Task node, double [] curr) {
+        return Math.abs((curr[0] - node.getTime())) + Math.abs((curr[1] - node.getMood())) + Math.abs((curr[2] - node.getEnergy())) + 
         Math.abs(Math.sqrt(Math.pow((curr[3] - node.getLatitude()), 2) + Math.pow((curr[4] - node.getLongitude()), 2)));
     }
 
@@ -262,6 +270,4 @@ public class TaskController {
                 return repository.save(newTask);
             });
     }
-
-    
 }
