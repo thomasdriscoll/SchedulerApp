@@ -55,7 +55,6 @@ public class TaskController {
         Task root = MedianOfMedians(tasks, tasks.size()/2, depth);                       //O(n)
         int rootIndex = tasks.indexOf(root);
         ancestry = ancestry+tasks.get(rootIndex).getId()+".";
-        System.out.println(ancestry);
         tasks.get(rootIndex).setAncestry(ancestry);
         kdtree.add(tasks.get(rootIndex));       
         double cut = getDepthValue(depth, tasks.get(rootIndex));             //O(1)
@@ -183,8 +182,9 @@ public class TaskController {
         int best = 0;
 
         ArrayList<Task> results = new ArrayList<Task>();
+        double[] hyperRect = {Double.MIN_VALUE, Double.MAX_VALUE, Double.MIN_VALUE, Double.MAX_VALUE, Double.MIN_VALUE, Double.MAX_VALUE, Double.MIN_VALUE, Double.MAX_VALUE, Double.MIN_VALUE, Double.MAX_VALUE};
         for(int i = 0; i < 10; i++){
-            best = traverseTree(tree, compare, depth, 0);
+            best = traverseTree(tree, compare, depth, 0, Double.MAX_VALUE, 0, hyperRect);
             results.add(tree.get(best));
             tree.get(best).setAncestry("none");
         } 
@@ -194,34 +194,31 @@ public class TaskController {
         return results;
     }
 
-    public int traverseTree(ArrayList<Task> tree, double [] compare, int depth, int i) {
-        if(tree.get(i).getLeftChild() == -1 && tree.get(i).getRightChild() == -1) { //if node is a leaf (can't traverse anymore, end recursion)
-            return i;
+    public int traverseTree(ArrayList<Task> tree, double [] compare, int dim, int i, double best_dist, int best_node, double [] hyperRect) {
+
+        if(i == -1 || calculateRectDist(compare, hyperRect) > best_dist) { //if node is a leaf (can't traverse anymore, end recursion)
+            return best_node;
         }
 
+        double distance = calculateWeight(tree.get(i), compare);
         int left = tree.get(i).getLeftChild(); 
         int right = tree.get(i).getRightChild();
-        int best = -1;
+        
+        if(distance < best_dist) {
+            best_node = i;
+            best_dist = distance;
+        }
 
-        if((getDepthValue(depth, tree.get(i)) > compare[depth]) && left != -1 && tree.get(i).getAncestry() != "none") {
-            best = traverseTree(tree, compare, (depth+1)%4, left); //will return some leaf node and assign it to var best 
+        if(compare[dim] < getDepthValue(dim, tree.get(i))){
+            best_node = traverseTree(tree, compare, (dim+1)%4, left, best_dist, best_node, trimHyperRectLeft(tree.get(i), hyperRect, dim)); //will return some leaf node and assign it to var best 
+            best_node = traverseTree(tree, compare, (dim+1)%4, right, best_dist, best_node, trimHyperRectRight(tree.get(i), hyperRect, dim));
         }
         else {
-            best = traverseTree(tree, compare, (depth+1)%4, right);
+            best_node = traverseTree(tree, compare, (dim+1)%4, right, best_dist, best_node, trimHyperRectRight(tree.get(i), hyperRect, dim)); //will return some leaf node and assign it to var best 
+            best_node = traverseTree(tree, compare, (dim+1)%4, left, best_dist, best_node, trimHyperRectLeft(tree.get(i), hyperRect, dim));
         }
 
-        double curr_node = calculateWeight(tree.get(i), compare);
-        double pot_best = calculateWeight(tree.get(best), compare); //will return some arraylist value
-
-        if (tree.get(best).getAncestry() == "none") {
-            return i;
-        }
-        
-        if(curr_node < pot_best && tree.get(i).getAncestry() != "none"){
-            best = i; //new best index
-        }
-
-        return best;   
+        return best_node;   
     }
 
     //checks for "closeness"
@@ -229,6 +226,65 @@ public class TaskController {
         return Math.abs((curr[0] - node.getTime())) + Math.abs((curr[1] - node.getMood())) + Math.abs((curr[2] - node.getEnergy())) + 
         Math.abs(Math.sqrt(Math.pow((curr[3] - node.getLatitude()), 2) + Math.pow((curr[4] - node.getLongitude()), 2)));
     }
+
+    //Calculate the distance of the side nearest to a given point
+    public double calculateRectDist(double[] compare, double[] rect){
+        //Delete these dumb variables later
+        double time, mood, energy, latitude, longitude = 0;
+        time = compare[0];
+        mood = compare[1];
+        energy = compare[2];
+        latitude = compare[3];
+        longitude = compare[4];
+        //Check if point is inside current bounds of rectangle
+        if( 
+            (rect[0] <= time && time <= rect[1]) ||
+            (rect[2] <= mood && mood <= rect[3]) ||
+            (rect[4] <= energy && energy <= rect[5]) ||
+            (rect[6] <= latitude && latitude <= rect[7]) ||
+            (rect[8] <= longitude && longitude <= rect[9])
+        ){
+            return 0;
+        }
+        else{
+            time = Math.min(Math.abs(time-rect[0]), Math.abs(time-rect[1]));
+            mood = Math.min(Math.abs(mood-rect[2]), Math.abs(mood-rect[3]));
+            energy = Math.min(Math.abs(energy-rect[4]), Math.abs(energy-rect[5]));
+            double distance = Math.min(
+                Math.sqrt(Math.pow((rect[6] - latitude), 2) + Math.pow((rect[8] - longitude), 2)), 
+                Math.sqrt(Math.pow((rect[7] - latitude), 2) + Math.pow((rect[9] - longitude), 2)));
+            return Math.min(Math.min(time, mood), Math.min(energy, distance));
+        }
+    }
+
+    //Update the max coordinate depending on if it is left or right
+    public double[] trimHyperRectLeft(Task curr, double[] hyperRect, int dim){
+        //Each row goes [time_min, time_max, mood_min, mood_max, energy_min, energy_max, lat_min, lat_max, long_min, long_max]
+        if(dim != 3){
+            hyperRect[2*dim+1] = getDepthValue(dim, curr);
+        }
+        else{
+            hyperRect[2*dim+1] = curr.getLatitude();
+            hyperRect[2*(dim+1)+1] = curr.getLongitude();
+        }
+        return hyperRect;
+    }
+
+    //Update the min coordinate depending on if it is left or right
+    public double[] trimHyperRectRight(Task curr, double[] hyperRect, int dim) {
+        // Remember dim 0 = time, dim 1 = mood, dim 2 = energy, dim 3 = distance
+        // Each row goes [time_min, time_max, mood_min, mood_max, energy_min, energy_max, lat_min, lat_max, long_min, long_max]
+        if(dim != 3){
+            hyperRect[2*dim] = getDepthValue(dim, curr);
+        }
+        else{
+            hyperRect[2*dim] = curr.getLatitude();
+            hyperRect[2*(dim+1)] = curr.getLongitude();
+        }
+
+        return hyperRect;
+    }
+
 
     //Get all -- mostly for testing
     @GetMapping(path="/api/task/all")

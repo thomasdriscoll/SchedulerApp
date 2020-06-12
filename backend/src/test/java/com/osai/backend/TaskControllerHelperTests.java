@@ -61,6 +61,9 @@ public class TaskControllerHelperTests {
         ArrayList<Task> tasks = arrayOfTasks();
         ArrayList<Task> kdtree = new ArrayList<Task>();
         this.controller.insertTask(tasks, kdtree, "", 0);
+        for(int i =0; i < kdtree.size(); i++){
+            System.out.println(kdtree.get(i).getAncestry());
+        }
         Assertions.assertEquals((long) 49, kdtree.get(0).getId());
         Assertions.assertEquals("49.", kdtree.get(0).getAncestry());
     }
@@ -99,6 +102,9 @@ public class TaskControllerHelperTests {
             double weight = this.controller.calculateWeight(results.get(i), curr);
             System.out.println(results.get(i) + " with distance " + weight);
             System.out.println();
+        }
+        for(int i=0; i < kdtree.size(); i++){
+            System.out.println(String.valueOf(kdtree.get(i).getId())+ " = " + String.valueOf(this.controller.calculateWeight(kdtree.get(i), curr)));
         }
         Assertions.assertEquals(10, results.size());
         Assertions.assertEquals(true, false); //to find test file (force fail)
