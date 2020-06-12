@@ -96,7 +96,7 @@ public class TaskControllerHelperTests {
         ArrayList<Task> tasks = arrayOfTasks();
         ArrayList<Task> kdtree = new ArrayList<Task>();
         this.controller.insertTask(tasks, kdtree, "", 0);
-        double[] curr = {250, 4, 4, 250, 250};
+        double[] curr = {0, 0, 3, 250, 250};
         ArrayList<Task> results =  this.controller.findBestTen(kdtree, curr, 0);
         for(int i = 0; i < results.size(); i++){
             double weight = this.controller.calculateWeight(results.get(i), curr);

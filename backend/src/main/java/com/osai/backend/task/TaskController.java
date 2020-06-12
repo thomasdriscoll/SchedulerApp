@@ -183,7 +183,7 @@ public class TaskController {
 
         ArrayList<Task> results = new ArrayList<Task>();
         double[] hyperRect = {Double.MIN_VALUE, Double.MAX_VALUE, Double.MIN_VALUE, Double.MAX_VALUE, Double.MIN_VALUE, Double.MAX_VALUE, Double.MIN_VALUE, Double.MAX_VALUE, Double.MIN_VALUE, Double.MAX_VALUE};
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < 1; i++){
             best = traverseTree(tree, compare, depth, 0, Double.MAX_VALUE, 0, hyperRect);
             results.add(tree.get(best));
             tree.get(best).setAncestry("none");
@@ -208,23 +208,36 @@ public class TaskController {
             best_node = i;
             best_dist = distance;
         }
-
-        if(compare[dim] < getDepthValue(dim, tree.get(i))){
+        System.out.println("The best node is " + String.valueOf(tree.get(best_node).getId()) + " and the distance value is " + String.valueOf(distance) + " when best_dist is " + String.valueOf(best_dist)+ " and the curr task is "+String.valueOf(tree.get(i).getId()));
+        if(dim != 3 && compare[dim] < getDepthValue(dim, tree.get(i))){
+            System.out.println("Went left in normal function");
             best_node = traverseTree(tree, compare, (dim+1)%4, left, best_dist, best_node, trimHyperRectLeft(tree.get(i), hyperRect, dim)); //will return some leaf node and assign it to var best 
+            best_dist = calculateWeight(tree.get(best_node), compare);
             best_node = traverseTree(tree, compare, (dim+1)%4, right, best_dist, best_node, trimHyperRectRight(tree.get(i), hyperRect, dim));
+            best_dist = calculateWeight(tree.get(best_node), compare);
+        }
+        else if (dim == 3 &&  (Math.sqrt(Math.pow(compare[3], 2) + Math.pow(compare[4], 2)) < getDepthValue(dim, tree.get(i)))){
+            System.out.println("reached!");
+            best_node = traverseTree(tree, compare, (dim+1)%4, left, best_dist, best_node, trimHyperRectLeft(tree.get(i), hyperRect, dim)); //will return some leaf node and assign it to var best 
+            best_dist = calculateWeight(tree.get(best_node), compare);
+            best_node = traverseTree(tree, compare, (dim+1)%4, right, best_dist, best_node, trimHyperRectRight(tree.get(i), hyperRect, dim));
+            best_dist = calculateWeight(tree.get(best_node), compare);
         }
         else {
+            System.out.println("Went right");
             best_node = traverseTree(tree, compare, (dim+1)%4, right, best_dist, best_node, trimHyperRectRight(tree.get(i), hyperRect, dim)); //will return some leaf node and assign it to var best 
+            best_dist = calculateWeight(tree.get(best_node), compare);
             best_node = traverseTree(tree, compare, (dim+1)%4, left, best_dist, best_node, trimHyperRectLeft(tree.get(i), hyperRect, dim));
+            best_dist = calculateWeight(tree.get(best_node), compare);
         }
-
+        System.out.println("Best node is "+String.valueOf(tree.get(best_node).getId()));
         return best_node;   
     }
 
-    //checks for "closeness"
+    //checks for "closeness" -- I multiply by 20 for a very rough approximation
     public double calculateWeight(Task node, double [] curr) {
         return Math.abs((curr[0] - node.getTime())) + Math.abs((curr[1] - node.getMood())) + Math.abs((curr[2] - node.getEnergy())) + 
-        Math.abs(Math.sqrt(Math.pow((curr[3] - node.getLatitude()), 2) + Math.pow((curr[4] - node.getLongitude()), 2)));
+        Math.abs(Math.sqrt(Math.pow((curr[3] - node.getLatitude()), 2) + Math.pow((curr[4] - node.getLongitude()), 2)))/400;
     }
 
     //Calculate the distance of the side nearest to a given point
